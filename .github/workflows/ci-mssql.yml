@@ -2,7 +2,7 @@ on:
   - pull_request
   - push
 
-name: build
+name: ci-mssql
 
 jobs:
   tests:
@@ -29,8 +29,8 @@ jobs:
             extensions: pdo, pdo_sqlsrv
 
         exclude:
-           - php: "8.0"
-             mssql: "server:2017-latest"
+          - php: ["8.0"]
+            mssql: "server:2017-latest"
 
     services:
       mssql:

@@ -62,7 +62,7 @@ jobs:
       - name: Install dependencies
         run: composer update $DEFAULT_COMPOSER_FLAGS
       - name: PHP Unit tests for PHP 7.1
-        run: vendor/bin/phpunit --verbose --coverage-clover=coverage.clover --exclude-group oci,wincache,xcache,zenddata,cubrid --colors=always
+        run: vendor/bin/phpunit --verbose --coverage-clover=coverage.clover --exclude-group $PHPUNIT_EXCLUDE_GROUP --colors=always
         if: matrix.php == '7.1'
       - name: PHP Unit tests for PHP >= 7.2
         run: vendor/bin/phpunit --verbose --exclude-group $PHPUNIT_EXCLUDE_GROUP --colors=always

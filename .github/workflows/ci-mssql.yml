@@ -17,13 +17,13 @@ jobs:
       matrix:
         include:
           - php: '5.4'
-            extensions: pdo, pdo_sqlsrv-5.8.1
+            extensions: pdo, pdo_sqlsrv-4.0.7
             mssql: 'server:2017-latest'
           - php: '5.5'
-            extensions: pdo, pdo_sqlsrv-5.8.1
+            extensions: pdo, pdo_sqlsrv-4.0.7
             mssql: 'server:2017-latest'
           - php: '5.6'
-            extensions: pdo, pdo_sqlsrv-5.8.1
+            extensions: pdo, pdo_sqlsrv-4.0.7
             mssql: 'server:2017-latest'
           - php: '7.0'
             extensions: pdo, pdo_sqlsrv-5.8.1
@@ -68,7 +68,6 @@ jobs:
           php-version: ${{ matrix.php }}
           extensions: ${{ matrix.extensions }}
           ini-values: date.timezone='UTC'
-          coverage: pcov
           tools: composer:v2, pecl
 
       - name: Determine composer cache directory on Linux

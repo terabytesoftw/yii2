@@ -29,7 +29,7 @@ jobs:
         ports:
           - 5432:5432
         options: --name=postgres --health-cmd="pg_isready" --health-interval=10s --health-timeout=5s --health-retries=3
-    strategy:
+   strategy:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
@@ -47,7 +47,6 @@ jobs:
           tools: pecl
           extensions: apc, curl, dom, imagick, intl, mbstring, mcrypt, memcached, mysql, pdo, pdo_mysql, pdo_pgsql, pdo_sqlite, pgsql, sqlite
           ini-values: date.timezone='UTC', session.save_path="${{ runner.temp }}"
-        if: matrix.php == '7.4' || matrix.php == '7.3' || matrix.php == '7.2'
       - name: Install Memcached
         uses: niden/actions-memcached@v7
       - name: Get composer cache directory
@@ -62,7 +61,7 @@ jobs:
       - name: Install dependencies
         run: composer update $DEFAULT_COMPOSER_FLAGS
       - name: PHP Unit tests for PHP 7.1
-        run: vendor/bin/phpunit --verbose --coverage-clover=coverage.clover --exclude-group $PHPUNIT_EXCLUDE_GROUP --colors=always
+        run: vendor/bin/phpunit --verbose --coverage-clover=coverage.clover $PHPUNIT_EXCLUDE_GROUP --colors=always
         if: matrix.php == '7.1'
       - name: PHP Unit tests for PHP >= 7.2
         run: vendor/bin/phpunit --verbose --exclude-group $PHPUNIT_EXCLUDE_GROUP --colors=always

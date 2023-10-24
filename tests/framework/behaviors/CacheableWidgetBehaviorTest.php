@@ -5,6 +5,7 @@ namespace yiiunit\framework\behaviors;
 use PHPUnit\Framework\MockObject\MockObject;
 use yii\base\Widget;
 use yii\behaviors\CacheableWidgetBehavior;
+use yii\caching\ArrayCache;
 use yiiunit\TestCase;
 
 /**
@@ -17,17 +18,13 @@ class CacheableWidgetBehaviorTest extends TestCase
 {
     /**
      * Default-initialized simple cacheable widget mock.
-     *
-     * @var MockObject|SimpleCacheableWidget|CacheableWidgetBehavior
      */
-    private $simpleWidget;
+    private MockObject|SimpleCacheableWidget|CacheableWidgetBehavior|null $simpleWidget = null;
 
     /**
      * Default-initialized dynamic cacheable widget mock.
-     *
-     * @var MockObject|DynamicCacheableWidget|CacheableWidgetBehavior
      */
-    private $dynamicWidget;
+    private MockObject|SimpleCacheableWidget|CacheableWidgetBehavior|null $dynamicWidget = null;
 
     /**
      * {@inheritdoc}
@@ -91,7 +88,7 @@ class CacheableWidgetBehaviorTest extends TestCase
         $this->mockApplication([
             'components' => [
                 'cache' => [
-                    'class' => '\yii\caching\ArrayCache',
+                    'class' => ArrayCache::class,
                 ],
             ],
             'params' => [
@@ -155,7 +152,7 @@ class BaseCacheableWidget extends Widget
     public function behaviors()
     {
         return [
-            'cacheable' => 'yii\behaviors\CacheableWidgetBehavior',
+            'cacheable' => CacheableWidgetBehavior::class,
         ];
     }
 }

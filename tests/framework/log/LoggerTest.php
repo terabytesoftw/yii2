@@ -7,7 +7,6 @@
 
 namespace yiiunit\framework\log;
 
-use PHPUnit\Framework\MockObject\MockObject;
 use yii\log\Dispatcher;
 use yii\log\Logger;
 use yiiunit\TestCase;
@@ -23,14 +22,16 @@ class LoggerTest extends TestCase
     protected $logger;
 
     /**
-     * @var Dispatcher|MockObject
+     * @var Dispatcher|\PHPUnit_Framework_MockObject_MockObject
      */
     protected $dispatcher;
 
     protected function setUp(): void
     {
         $this->logger = new Logger();
-        $this->dispatcher = $this->createPartialMock(Dispatcher::class, ['dispatch']);
+        $this->dispatcher = $this->getMockBuilder('yii\log\Dispatcher')
+            ->onlyMethods(['dispatch'])
+            ->getMock();
     }
 
     /**
@@ -84,6 +85,7 @@ class LoggerTest extends TestCase
      */
     public function testLogWithFlush(): void
     {
+        /** @var Logger|\PHPUnit_Framework_MockObject_MockObject $logger  */
         $logger = $this->createPartialMock(Logger::class, ['flush']);
 
         $logger->flushInterval = 1;
@@ -146,6 +148,7 @@ class LoggerTest extends TestCase
             ['duration' => 30],
         ];
 
+        /** @var Logger|\PHPUnit_Framework_MockObject_MockObject $logger  */
         $logger = $this->createPartialMock(Logger::class, ['getProfiling']);
 
         $logger->method('getProfiling')->willReturn($timings);
@@ -339,6 +342,7 @@ class LoggerTest extends TestCase
         $messages = ['anyData'];
         $returnValue = 'return value';
 
+        /* @var $logger Logger|\PHPUnit_Framework_MockObject_MockObject */
         $logger = $this->createPartialMock(Logger::class, ['calculateTimings']);
 
         $logger->messages = $messages;
@@ -363,7 +367,7 @@ class LoggerTest extends TestCase
                 'duration' => 5,
             ],
         ];
-
+        /* @var $logger Logger|\PHPUnit_Framework_MockObject_MockObject */
         $logger = $this->createPartialMock(Logger::class, ['calculateTimings']);
 
         $logger->messages = $messages;
@@ -398,10 +402,10 @@ class LoggerTest extends TestCase
             'anyKey' => $matchedByCategoryName,
             $secondCategory,
         ];
-
         /*
          * Matched by category name
          */
+        /* @var $logger Logger|\PHPUnit_Framework_MockObject_MockObject */
         $logger = $this->createPartialMock(Logger::class, ['calculateTimings']);
 
         $logger->messages = $messages;
@@ -412,6 +416,7 @@ class LoggerTest extends TestCase
         /*
          * Matched by prefix
          */
+        /* @var $logger Logger|\PHPUnit_Framework_MockObject_MockObject */
         $logger = $this->createPartialMock(Logger::class, ['calculateTimings']);
 
         $logger->messages = $messages;
@@ -458,6 +463,7 @@ class LoggerTest extends TestCase
         /*
          * Exclude by category name
          */
+        /* @var $logger Logger|\PHPUnit_Framework_MockObject_MockObject */
         $logger = $this->createPartialMock(Logger::class, ['calculateTimings']);
 
         $logger->messages = $messages;
@@ -468,6 +474,7 @@ class LoggerTest extends TestCase
         /*
          * Exclude by category prefix
          */
+        /* @var $logger Logger|\PHPUnit_Framework_MockObject_MockObject */
         $logger = $this->createPartialMock(Logger::class, ['calculateTimings']);
 
         $logger->messages = $messages;
@@ -476,7 +483,7 @@ class LoggerTest extends TestCase
         $this->assertEquals([$fistCategory], $logger->getProfiling(['cat*'], ['category*']));
     }
 
-    public static function providerForNonProfilingMessages(): array
+    public static function providerForNonProfilingMessages()
     {
         return [
             [Logger::LEVEL_ERROR],

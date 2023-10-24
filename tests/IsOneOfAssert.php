@@ -27,7 +27,7 @@ class IsOneOfAssert extends \PHPUnit\Framework\Constraint\Constraint
         $allowedValues = [];
 
         foreach ($this->allowedValues as $value) {
-            $this->allowedValues[] = VarDumper::create($value)->asString();
+            $this->allowedValues[] = VarDumper::dumpAsString($value);
         }
 
         $expectedAsString = implode(', ', $allowedValues);

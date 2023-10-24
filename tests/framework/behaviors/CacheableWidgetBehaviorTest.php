@@ -2,7 +2,7 @@
 
 namespace yiiunit\framework\behaviors;
 
-use PHPUnit_Framework_MockObject_MockObject;
+use PHPUnit\Framework\MockObject\MockObject;
 use yii\base\Widget;
 use yii\behaviors\CacheableWidgetBehavior;
 use yiiunit\TestCase;
@@ -18,14 +18,14 @@ class CacheableWidgetBehaviorTest extends TestCase
     /**
      * Default-initialized simple cacheable widget mock.
      *
-     * @var PHPUnit_Framework_MockObject_MockObject|SimpleCacheableWidget|CacheableWidgetBehavior
+     * @var MockObject|SimpleCacheableWidget|CacheableWidgetBehavior
      */
     private $simpleWidget;
 
     /**
      * Default-initialized dynamic cacheable widget mock.
      *
-     * @var PHPUnit_Framework_MockObject_MockObject|DynamicCacheableWidget|CacheableWidgetBehavior
+     * @var MockObject|DynamicCacheableWidget|CacheableWidgetBehavior
      */
     private $dynamicWidget;
 
@@ -113,18 +113,14 @@ class CacheableWidgetBehaviorTest extends TestCase
 
     /**
      * Returns a widget mock.
-     * @param $widgetClass
-     * @return PHPUnit_Framework_MockObject_MockObject
      */
-    private function getWidgetMock(string $widgetClass)
+    private function getWidgetMock(string $widgetClass): MockObject
     {
-        $widgetMock = $this->getMockBuilder($widgetClass)
-            ->setMethods(['run'])
+        return $this->getMockBuilder($widgetClass)
+            ->onlyMethods(['run'])
             ->enableOriginalConstructor()
             ->enableProxyingToOriginalMethods()
             ->getMock();
-
-        return $widgetMock;
     }
 }
 

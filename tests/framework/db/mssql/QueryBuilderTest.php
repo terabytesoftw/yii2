@@ -475,7 +475,7 @@ WHILE 1=1 BEGIN
     EXEC (N'ALTER TABLE ' + @tableName + ' DROP CONSTRAINT [' + @constraintName + ']')
 END";
         $sql = $qb->alterColumn('foo1', 'bar', 'varchar(255)');
-        $this->assertEquals($expected, $sql);
+        $this->assertEqualsWithoutLE($expected, $sql);
 
         $expected = "ALTER TABLE [foo1] ALTER COLUMN [bar] nvarchar(255) NOT NULL
 DECLARE @tableName VARCHAR(MAX) = '[foo1]'
@@ -501,7 +501,7 @@ WHILE 1=1 BEGIN
     EXEC (N'ALTER TABLE ' + @tableName + ' DROP CONSTRAINT [' + @constraintName + ']')
 END";
         $sql = $qb->alterColumn('foo1', 'bar', $this->string(255)->notNull());
-        $this->assertEquals($expected, $sql);
+        $this->assertEqualsWithoutLE($expected, $sql);
 
         $expected = "ALTER TABLE [foo1] ALTER COLUMN [bar] nvarchar(255)
 DECLARE @tableName VARCHAR(MAX) = '[foo1]'
@@ -528,7 +528,7 @@ WHILE 1=1 BEGIN
 END
 ALTER TABLE [foo1] ADD CONSTRAINT [CK_foo1_bar] CHECK (LEN(bar) > 5)";
         $sql = $qb->alterColumn('foo1', 'bar', $this->string(255)->check('LEN(bar) > 5'));
-        $this->assertEquals($expected, $sql);
+        $this->assertEqualsWithoutLE($expected, $sql);
 
         $expected = "ALTER TABLE [foo1] ALTER COLUMN [bar] nvarchar(255)
 DECLARE @tableName VARCHAR(MAX) = '[foo1]'
@@ -555,7 +555,7 @@ WHILE 1=1 BEGIN
 END
 ALTER TABLE [foo1] ADD CONSTRAINT [DF_foo1_bar] DEFAULT '' FOR [bar]";
         $sql = $qb->alterColumn('foo1', 'bar', $this->string(255)->defaultValue(''));
-        $this->assertEquals($expected, $sql);
+        $this->assertEqualsWithoutLE($expected, $sql);
 
         $expected = "ALTER TABLE [foo1] ALTER COLUMN [bar] nvarchar(255)
 DECLARE @tableName VARCHAR(MAX) = '[foo1]'
@@ -582,7 +582,7 @@ WHILE 1=1 BEGIN
 END
 ALTER TABLE [foo1] ADD CONSTRAINT [DF_foo1_bar] DEFAULT 'AbCdE' FOR [bar]";
         $sql = $qb->alterColumn('foo1', 'bar', $this->string(255)->defaultValue('AbCdE'));
-        $this->assertEquals($expected, $sql);
+        $this->assertEqualsWithoutLE($expected, $sql);
 
         $expected = "ALTER TABLE [foo1] ALTER COLUMN [bar] datetime
 DECLARE @tableName VARCHAR(MAX) = '[foo1]'
@@ -609,7 +609,7 @@ WHILE 1=1 BEGIN
 END
 ALTER TABLE [foo1] ADD CONSTRAINT [DF_foo1_bar] DEFAULT CURRENT_TIMESTAMP FOR [bar]";
         $sql = $qb->alterColumn('foo1', 'bar', $this->timestamp()->defaultExpression('CURRENT_TIMESTAMP'));
-        $this->assertEquals($expected, $sql);
+        $this->assertEqualsWithoutLE($expected, $sql);
 
         $expected = "ALTER TABLE [foo1] ALTER COLUMN [bar] nvarchar(30)
 DECLARE @tableName VARCHAR(MAX) = '[foo1]'
@@ -636,7 +636,7 @@ WHILE 1=1 BEGIN
 END
 ALTER TABLE [foo1] ADD CONSTRAINT [UQ_foo1_bar] UNIQUE ([bar])";
         $sql = $qb->alterColumn('foo1', 'bar', $this->string(30)->unique());
-        $this->assertEquals($expected, $sql);
+        $this->assertEqualsWithoutLE($expected, $sql);
     }
 
     public function testAlterColumnOnDb(): void
@@ -686,7 +686,7 @@ WHILE 1=1 BEGIN
 END
 ALTER TABLE [foo1] ADD CONSTRAINT [DF_foo1_bar] DEFAULT NULL FOR [bar]";
         $sql = $qb->alterColumn('foo1', 'bar', $this->integer()->null()->defaultValue(NULL));
-        $this->assertEquals($expected, $sql);
+        $this->assertEqualsWithoutLE($expected, $sql);
     }
 
     public function testAlterColumnWithExpression(): void
@@ -718,7 +718,7 @@ WHILE 1=1 BEGIN
 END
 ALTER TABLE [foo1] ADD CONSTRAINT [DF_foo1_bar] DEFAULT CAST(GETDATE() AS INT) FOR [bar]";
         $sql = $qb->alterColumn('foo1', 'bar', $this->integer()->null()->defaultValue(new Expression('CAST(GETDATE() AS INT)')));
-        $this->assertEquals($expected, $sql);
+        $this->assertEqualsWithoutLE($expected, $sql);
     }
 
     public function testAlterColumnWithCheckConstraintOnDb(): void
@@ -789,7 +789,7 @@ WHILE 1=1 BEGIN
 END
 ALTER TABLE [foo1] DROP COLUMN [bar]";
         $sql = $qb->dropColumn('foo1', 'bar');
-        $this->assertEquals($expected, $sql);
+        $this->assertEqualsWithoutLE($expected, $sql);
     }
 
     public function testDropColumnOnDb(): void

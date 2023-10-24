@@ -18,9 +18,10 @@ class BooleanTest extends DatabaseTestCase
 {
     protected $driverName = 'sqlsrv';
 
-    public function testIsBoolean(): void
+    public function testBoolean(): void
     {
         $db = $this->getConnection(true);
+        $schema = $db->getSchema();
         $tableName = '{{%boolean}}';
 
         if ($db->getTableSchema($tableName)) {
@@ -30,15 +31,23 @@ class BooleanTest extends DatabaseTestCase
         $db->createCommand()->createTable(
             $tableName,
             [
-                'id' => $db->getSchema()->createColumnSchemaBuilder(Schema::TYPE_PK),
-                'bool_col' => $db->getSchema()->createColumnSchemaBuilder(Schema::TYPE_BOOLEAN, 1),
+                'id' => $schema->createColumnSchemaBuilder(Schema::TYPE_PK),
+                'bool_col' => $schema->createColumnSchemaBuilder(Schema::TYPE_BOOLEAN),
             ]
         )->execute();
 
-        $this->assertSame('boolean', $db->getTableSchema($tableName)->getColumn('bool_col')->phpType);
+        $column = $db->getTableSchema($tableName)->getColumn('bool_col');
+
+        $this->assertSame('boolean', $column->phpType);
 
         $db->createCommand()->insert($tableName, ['bool_col' => true])->execute();
 
-        $this->assertEquals(1, $db->createCommand("SELECT bool_col FROM $tableName WHERE id = 1")->queryScalar());
+        $boolValue = $db->createCommand("SELECT bool_col FROM $tableName WHERE id = 1")->queryScalar();
+
+        $this->assertEquals(1, $boolValue);
+
+        $phpTypeCast = $column->phpTypecast($boolValue);
+
+        $this->assertSame(true, $phpTypeCast);
     }
 }

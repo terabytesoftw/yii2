@@ -22,7 +22,6 @@ class FakePhp71Controller extends Controller
         ?Post $post,
         $after
     ) {
-
     }
 
     public function actionNullableInjection(?Request $request, ?Post $post)

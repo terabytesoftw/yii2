@@ -403,4 +403,30 @@ MySqlStatement;
         $sql = $command->insert('negative_default_values', [])->getRawSql();
         $this->assertEquals("INSERT INTO `negative_default_values` (`tinyint_col`) VALUES (DEFAULT)", $sql);
     }
+
+    public function testAddCheck(): void
+    {
+        $db = $this->getConnection(false);
+        $command = $db->createCommand();
+
+        $sql = $command->addCheck('check_int1_positive', 'test_ck_several', '[[int1]] > 0')->getRawSql();
+
+        $this->assertSame(
+            'ALTER TABLE `test_ck_several` ADD CONSTRAINT `check_int1_positive` CHECK (`int1` > 0)',
+            $sql,
+        );
+    }
+
+    public function testAddCheckWithNotEnforced(): void
+    {
+        $db = $this->getConnection(false);
+        $command = $db->createCommand();
+
+        $sql = $command->addCheck('check_int1_positive', 'test_ck_several', '[[int1]] > 0', false)->getRawSql();
+
+        $this->assertSame(
+            'ALTER TABLE `test_ck_several` ADD CONSTRAINT `check_int1_positive` CHECK (`int1` > 0) NOT ENFORCED',
+            $sql,
+        );
+    }
 }

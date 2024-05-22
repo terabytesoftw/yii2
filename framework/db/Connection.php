@@ -313,7 +313,7 @@ class Connection extends Component
     public $commandMap = [
         'pgsql' => 'yii\db\Command', // PostgreSQL
         'mysqli' => 'yii\db\Command', // MySQL
-        'mysql' => 'yii\db\Command', // MySQL
+        'mysql' => 'yii\db\mysql\Command', // MySQL
         'sqlite' => 'yii\db\sqlite\Command', // sqlite 3
         'sqlite2' => 'yii\db\sqlite\Command', // sqlite 2
         'sqlsrv' => 'yii\db\Command', // newer MSSQL driver on MS Windows hosts

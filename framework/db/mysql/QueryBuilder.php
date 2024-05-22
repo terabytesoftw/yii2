@@ -426,4 +426,22 @@ class QueryBuilder extends \yii\db\QueryBuilder
 
         return $map;
     }
+
+    /**
+     * Creates a SQL command for adding a check constraint to an existing table in MySQL.
+     * @param string $name the name of the check constraint.
+     * The name will be properly quoted by the method.
+     * @param string $table the table that the check constraint will be added to.
+     * The name will be properly quoted by the method.
+     * @param string $expression the SQL of the `CHECK` constraint.
+     * @param bool $enfoced whether the constraint is enforced by the database. Defaults to `true`.
+     * @return string the SQL statement for adding a check constraint to an existing table.
+     * @since 2.0.50
+     */
+    public function addCheck($name, $table, $expression, $enfoced = true)
+    {
+        return 'ALTER TABLE ' . $this->db->quoteTableName($table) . ' ADD CONSTRAINT '
+            . $this->db->quoteColumnName($name) . ' CHECK (' . $this->db->quoteSql($expression) . ')' .
+            ($enfoced ? '' : ' NOT ENFORCED');
+    }
 }

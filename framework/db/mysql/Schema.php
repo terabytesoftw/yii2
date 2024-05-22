@@ -210,15 +210,32 @@ SQL;
             throw new NotSupportedException('MySQL < 8.0.16 does not support check constraints.');
         }
 
+        if (
+            str_contains($this->db->getServerVersion(), 'MariaDB') &&
+            version_compare($this->db->getServerVersion(), '10.2.2', '<')
+        ) {
+            throw new NotSupportedException('MariaDB does not support check constraints.');
+        }
+
         $checks = [];
 
         $sql = <<<SQL
-        SELECT cc.CONSTRAINT_NAME as constraint_name, cc.CHECK_CLAUSE as check_clause
+        SELECT cc.CONSTRAINT_NAME as constraint_name, cc.CHECK_CLAUSE as check_clause, tc.ENFORCED as enforced
         FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS tc
         JOIN INFORMATION_SCHEMA.CHECK_CONSTRAINTS cc
         ON tc.CONSTRAINT_NAME = cc.CONSTRAINT_NAME
         WHERE tc.TABLE_NAME = :tableName AND tc.CONSTRAINT_TYPE = 'CHECK';
         SQL;
+
+        if (str_contains($this->db->getServerVersion(), 'MariaDB')) {
+            $sql = <<<SQL
+            SELECT cc.CONSTRAINT_NAME as constraint_name, cc.CHECK_CLAUSE as check_clause
+            FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS tc
+            JOIN INFORMATION_SCHEMA.CHECK_CONSTRAINTS cc
+            ON tc.CONSTRAINT_NAME = cc.CONSTRAINT_NAME
+            WHERE tc.TABLE_NAME = :tableName AND tc.CONSTRAINT_TYPE = 'CHECK';
+            SQL;
+        }
 
         $resolvedName = $this->resolveTableName($tableName);
         $tableRows = $this->db->createCommand($sql, [':tableName' => $resolvedName->name])->queryAll();
@@ -230,17 +247,9 @@ SQL;
         $tableRows = $this->normalizePdoRowKeyCase($tableRows, true);
 
         foreach ($tableRows as $tableRow) {
-            $matches = [];
-            $columnName = null;
-
-            if (preg_match('/\(`?([a-zA-Z0-9_]+)`?\s*[><=]/', $tableRow['check_clause'], $matches)) {
-                $columnName = $matches[1];
-            }
-
             $check = new CheckConstraint(
                 [
                     'name' => $tableRow['constraint_name'],
-                    'columnNames' => [$columnName],
                     'expression' => $tableRow['check_clause'],
                 ]
             );

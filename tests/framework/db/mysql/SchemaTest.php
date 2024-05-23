@@ -147,94 +147,16 @@ SQL;
 
     public function getExpectedColumns()
     {
-        $version = $this->getConnection()->getSchema()->getServerVersion();
+        $version = $this->getConnection(false)->getServerVersion();
 
-        $columns = array_merge(
-            parent::getExpectedColumns(),
-            [
-                'int_col' => [
-                    'type' => 'integer',
-                    'dbType' => \version_compare($version, '8.0.17', '>') ? 'int' : 'int(11)',
-                    'phpType' => 'integer',
-                    'allowNull' => false,
-                    'autoIncrement' => false,
-                    'enumValues' => null,
-                    'size' => \version_compare($version, '8.0.17', '>') ? null : 11,
-                    'precision' => \version_compare($version, '8.0.17', '>') ? null : 11,
-                    'scale' => null,
-                    'defaultValue' => null,
-                ],
-                'int_col2' => [
-                    'type' => 'integer',
-                    'dbType' => \version_compare($version, '8.0.17', '>') ? 'int' : 'int(11)',
-                    'phpType' => 'integer',
-                    'allowNull' => true,
-                    'autoIncrement' => false,
-                    'enumValues' => null,
-                    'size' => \version_compare($version, '8.0.17', '>') ? null : 11,
-                    'precision' => \version_compare($version, '8.0.17', '>') ? null : 11,
-                    'scale' => null,
-                    'defaultValue' => 1,
-                ],
-                'int_col3' => [
-                    'type' => 'integer',
-                    'dbType' => \version_compare($version, '8.0.17', '>') ? 'int unsigned' : 'int(11) unsigned',
-                    'phpType' => 'integer',
-                    'allowNull' => true,
-                    'autoIncrement' => false,
-                    'enumValues' => null,
-                    'size' => \version_compare($version, '8.0.17', '>') ? null : 11,
-                    'precision' => \version_compare($version, '8.0.17', '>') ? null : 11,
-                    'scale' => null,
-                    'defaultValue' => 1,
-                ],
-                'tinyint_col' => [
-                    'type' => 'tinyint',
-                    'dbType' => \version_compare($version, '8.0.17', '>') ? 'tinyint' : 'tinyint(3)',
-                    'phpType' => 'integer',
-                    'allowNull' => true,
-                    'autoIncrement' => false,
-                    'enumValues' => null,
-                    'size' => \version_compare($version, '8.0.17', '>') ? null : 3,
-                    'precision' => \version_compare($version, '8.0.17', '>') ? null : 3,
-                    'scale' => null,
-                    'defaultValue' => 1,
-                ],
-                'smallint_col' => [
-                    'type' => 'smallint',
-                    'dbType' =>  \version_compare($version, '8.0.17', '>') ? 'smallint' : 'smallint(1)',
-                    'phpType' => 'integer',
-                    'allowNull' => true,
-                    'autoIncrement' => false,
-                    'enumValues' => null,
-                    'size' => \version_compare($version, '8.0.17', '>') ? null : 1,
-                    'precision' => \version_compare($version, '8.0.17', '>') ? null : 1,
-                    'scale' => null,
-                    'defaultValue' => 1,
-                ],
-                'bigint_col' => [
-                    'type' => 'bigint',
-                    'dbType' => \version_compare($version, '8.0.17', '>') ? 'bigint unsigned' : 'bigint(20) unsigned',
-                    'phpType' => 'string',
-                    'allowNull' => true,
-                    'autoIncrement' => false,
-                    'enumValues' => null,
-                    'size' => \version_compare($version, '8.0.17', '>') ? null : 20,
-                    'precision' => \version_compare($version, '8.0.17', '>') ? null : 20,
-                    'scale' => null,
-                    'defaultValue' => null,
-                ],
-            ]
-        );
-
-        if (version_compare($version, '5.7', '<')) {
-            $columns['int_col3']['phpType'] = 'string';
-            $columns['json_col']['type'] = 'text';
-            $columns['json_col']['dbType'] = 'longtext';
-            $columns['json_col']['phpType'] = 'string';
+        if (\stripos($version, 'MariaDB') === false) {
+            $expectedColumns = $this->getExpectedColumnsMysql($version);
+        } else {
+            $version = \explode('-', $version);
+            $expectedColumns = $this->getExpectedColumnsMariaDb($version[0]);
         }
 
-        return $columns;
+        return array_merge(parent::getExpectedColumns(), $expectedColumns);
     }
 
     public function constraintsProviderMariaDb()
@@ -257,7 +179,7 @@ SQL;
     {
         $version = $this->getConnection(false)->getServerVersion();
 
-        if (\stripos($version, 'mariadb') !== false) {
+        if (\stripos($version, 'MariaDB') !== false) {
             $this->markTestSkipped('Test is for MySQL only.');
         }
 
@@ -283,7 +205,7 @@ SQL;
     {
         $version = $this->getConnection(false)->getServerVersion();
 
-        if (\stripos($version, 'mariadb') === false) {
+        if (\stripos($version, 'MariaDB') === false) {
             $this->markTestSkipped('Test is for MariaDB only.');
         }
 
@@ -291,8 +213,12 @@ SQL;
             $this->expectException('yii\base\NotSupportedException');
         }
 
-        if (\stripos($version, 'mariadb') !== false && version_compare($version, '10.2.0', '<') && $type === 'checks') {
-            $this->expectException('yii\base\NotSupportedException');
+        if (\stripos($version, 'MariaDB') !== false && $type === 'checks') {
+            $version = \explode('-', $version);
+
+            if (version_compare($version[0], '10.2.0', '<')) {
+                $this->expectException('yii\base\NotSupportedException');
+            }
         }
 
         $constraints = $this->getConnection(false)->getSchema()->{'getTable' . ucfirst($type)}($tableName);
@@ -314,7 +240,7 @@ SQL;
     {
         $version = $this->getConnection(false)->getServerVersion();
 
-        if (\stripos($version, 'mariadb') !== false) {
+        if (\stripos($version, 'MariaDb') !== false) {
             $this->markTestSkipped('Test is for MySQL only.');
         }
 
@@ -344,7 +270,7 @@ SQL;
     {
         $version = $this->getConnection(false)->getServerVersion();
 
-        if (\stripos($version, 'mariadb') === false) {
+        if (\stripos($version, 'MariaDb') === false) {
             $this->markTestSkipped('Test is for MariaDB only.');
         }
 
@@ -352,8 +278,12 @@ SQL;
             $this->expectException('yii\base\NotSupportedException');
         }
 
-        if (\stripos($version, 'mariadb') !== false && version_compare($version, '10.2.0', '<') && $type === 'checks') {
-            $this->expectException('yii\base\NotSupportedException');
+        if (\stripos($version, 'MariaDb') !== false && $type === 'checks') {
+            $version = \explode('-', $version);
+
+            if (version_compare($version[0], '10.2.0', '<')) {
+                $this->expectException('yii\base\NotSupportedException');
+            }
         }
 
         $connection = $this->getConnection(false);
@@ -377,7 +307,7 @@ SQL;
     {
         $version = $this->getConnection(false)->getServerVersion();
 
-        if (\stripos($version, 'mariadb') !== false) {
+        if (\stripos($version, 'MariaDb') !== false) {
             $this->markTestSkipped('Test is for MySQL only.');
         }
 
@@ -405,7 +335,7 @@ SQL;
     {
         $version = $this->getConnection(false)->getServerVersion();
 
-        if (\stripos($version, 'mariadb') === false) {
+        if (\stripos($version, 'MariaDb') === false) {
             $this->markTestSkipped('Test is for MariaDB only.');
         }
 
@@ -413,13 +343,152 @@ SQL;
             $this->expectException('yii\base\NotSupportedException');
         }
 
-        if (\stripos($version, 'mariadb') !== false && version_compare($version, '10.2.0', '<') && $type === 'checks') {
-            $this->expectException('yii\base\NotSupportedException');
+        if (\stripos($version, 'MariaDB') !== false && $type === 'checks') {
+            $version = \explode('-', $version);
+
+            if (version_compare($version[0], '10.2.0', '<')) {
+                $this->expectException('yii\base\NotSupportedException');
+            }
         }
 
         $connection = $this->getConnection(false);
         $connection->getSlavePdo(true)->setAttribute(\PDO::ATTR_CASE, \PDO::CASE_LOWER);
         $constraints = $connection->getSchema()->{'getTable' . ucfirst($type)}($tableName, true);
         $this->assertMetadataEquals($expected, $constraints);
+    }
+
+    /**
+     * @param string $version MySQL/MariaDB version.
+     */
+    public function getExpectedColumnsMysql($version)
+    {
+        $columns = [
+            'int_col' => [
+                'type' => 'integer',
+                'dbType' => \version_compare($version, '8.0.17', '>') ? 'int' : 'int(11)',
+                'phpType' => 'integer',
+                'allowNull' => false,
+                'autoIncrement' => false,
+                'enumValues' => null,
+                'size' => \version_compare($version, '8.0.17', '>') ? null : 11,
+                'precision' => \version_compare($version, '8.0.17', '>') ? null : 11,
+                'scale' => null,
+                'defaultValue' => null,
+            ],
+            'int_col2' => [
+                'type' => 'integer',
+                'dbType' => \version_compare($version, '8.0.17', '>') ? 'int' : 'int(11)',
+                'phpType' => 'integer',
+                'allowNull' => true,
+                'autoIncrement' => false,
+                'enumValues' => null,
+                'size' => \version_compare($version, '8.0.17', '>') ? null : 11,
+                'precision' => \version_compare($version, '8.0.17', '>') ? null : 11,
+                'scale' => null,
+                'defaultValue' => 1,
+            ],
+            'int_col3' => [
+                'type' => 'integer',
+                'dbType' => \version_compare($version, '8.0.17', '>') ? 'int unsigned' : 'int(11) unsigned',
+                'phpType' => 'integer',
+                'allowNull' => true,
+                'autoIncrement' => false,
+                'enumValues' => null,
+                'size' => \version_compare($version, '8.0.17', '>') ? null : 11,
+                'precision' => \version_compare($version, '8.0.17', '>') ? null : 11,
+                'scale' => null,
+                'defaultValue' => 1,
+            ],
+            'tinyint_col' => [
+                'type' => 'tinyint',
+                'dbType' => \version_compare($version, '8.0.17', '>') ? 'tinyint' : 'tinyint(3)',
+                'phpType' => 'integer',
+                'allowNull' => true,
+                'autoIncrement' => false,
+                'enumValues' => null,
+                'size' => \version_compare($version, '8.0.17', '>') ? null : 3,
+                'precision' => \version_compare($version, '8.0.17', '>') ? null : 3,
+                'scale' => null,
+                'defaultValue' => 1,
+            ],
+            'smallint_col' => [
+                'type' => 'smallint',
+                'dbType' =>  \version_compare($version, '8.0.17', '>') ? 'smallint' : 'smallint(1)',
+                'phpType' => 'integer',
+                'allowNull' => true,
+                'autoIncrement' => false,
+                'enumValues' => null,
+                'size' => \version_compare($version, '8.0.17', '>') ? null : 1,
+                'precision' => \version_compare($version, '8.0.17', '>') ? null : 1,
+                'scale' => null,
+                'defaultValue' => 1,
+            ],
+            'bigint_col' => [
+                'type' => 'bigint',
+                'dbType' => \version_compare($version, '8.0.17', '>') ? 'bigint unsigned' : 'bigint(20) unsigned',
+                'phpType' => 'string',
+                'allowNull' => true,
+                'autoIncrement' => false,
+                'enumValues' => null,
+                'size' => \version_compare($version, '8.0.17', '>') ? null : 20,
+                'precision' => \version_compare($version, '8.0.17', '>') ? null : 20,
+                'scale' => null,
+                'defaultValue' => null,
+            ],
+        ];
+
+        if (version_compare($version, '5.7', '<')) {
+            $columns['int_col3']['phpType'] = 'string';
+            $columns['json_col']['type'] = 'text';
+            $columns['json_col']['dbType'] = 'longtext';
+            $columns['json_col']['phpType'] = 'string';
+        }
+
+        return $columns;
+    }
+
+    /**
+     * @param string $version MySQL/MariaDB version.
+     */
+    public function getExpectedColumnsMariaDb($version)
+    {
+        return [
+            'int_col' => [
+                'type' => 'integer',
+                'dbType' => \version_compare($version, '10.2.1', '<') ? 'int' : 'int(11)',
+                'phpType' => 'integer',
+                'allowNull' => false,
+                'autoIncrement' => false,
+                'enumValues' => null,
+                'size' => \version_compare($version, '10.2.1', '<') ? null : 11,
+                'precision' => \version_compare($version, '10.2.1', '<') ? null : 11,
+                'scale' => null,
+                'defaultValue' => null,
+            ],
+            'int_col3' => [
+                'type' => 'integer',
+                'dbType' => \version_compare($version, '10.2.1', '<') ? 'int unsigned' : 'int(11) unsigned',
+                'phpType' => 'integer',
+                'allowNull' => true,
+                'autoIncrement' => false,
+                'enumValues' => null,
+                'size' => \version_compare($version, '10.2.1', '<') ? null : 11,
+                'precision' => \version_compare($version, '10.2.1', '<') ? null : 11,
+                'scale' => null,
+                'defaultValue' => 1,
+            ],
+            'bigint_col' => [
+                'type' => 'bigint',
+                'dbType' => \version_compare($version, '10.2.1', '<') ? 'bigint unsigned' : 'bigint(20) unsigned',
+                'phpType' => 'string',
+                'allowNull' => true,
+                'autoIncrement' => false,
+                'enumValues' => null,
+                'size' => \version_compare($version, '10.2.1', '<') ? null : 20,
+                'precision' => \version_compare($version, '10.2.1', '<') ? null : 20,
+                'scale' => null,
+                'defaultValue' => null,
+            ],
+        ];
     }
 }

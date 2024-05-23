@@ -208,11 +208,11 @@ SQL;
         $version = $this->db->getServerVersion();
 
         // check version MySQL >= 8.0.16
-        if (\stripos($version, 'mariadb') === false && \version_compare($version, '8.0.16', '<')) {
+        if (\stripos($version, 'MariaDb') === false && \version_compare($version, '8.0.16', '<')) {
             throw new NotSupportedException('MySQL < 8.0.16 does not support check constraints.');
         }
 
-        if (\stripos($version, 'mariadb') !== false && \version_compare($version, '10.2.2', '<')) {
+        if (\stripos($version, 'MariaDb') !== false && \version_compare($version, '10.2.2', '<')) {
             throw new NotSupportedException('MariaDB does not support check constraints.');
         }
 
@@ -226,7 +226,7 @@ SQL;
         WHERE tc.TABLE_NAME = :tableName AND tc.CONSTRAINT_TYPE = 'CHECK';
         SQL;
 
-        if (\stripos($version, 'mariadb') !== false) {
+        if (\stripos($version, 'MariaDb') !== false) {
             $sql = <<<SQL
             SELECT cc.CONSTRAINT_NAME as constraint_name, cc.CHECK_CLAUSE as check_clause
             FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS tc

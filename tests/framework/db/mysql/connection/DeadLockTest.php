@@ -31,6 +31,8 @@ class DeadLockTest extends \yiiunit\framework\db\mysql\ConnectionTest
      */
     public function testDeadlockException()
     {
+        $version = $this->getConnection(false)->getServerVersion();
+
         if (PHP_VERSION_ID >= 70400 && PHP_VERSION_ID < 70500) {
             $this->markTestSkipped('Stable failed in PHP 7.4');
         }
@@ -43,6 +45,9 @@ class DeadLockTest extends \yiiunit\framework\db\mysql\ConnectionTest
         // HHVM does not support this (?)
         if (!\function_exists('pcntl_sigtimedwait')) {
             $this->markTestSkipped('pcntl_sigtimedwait() is not available');
+        }
+        if (\stripos($version, 'MariaDb') !== false) {
+            $this->markTestSkipped('Run only for MySQL');
         }
 
         $this->setLogFile(sys_get_temp_dir() . '/deadlock_' . posix_getpid());

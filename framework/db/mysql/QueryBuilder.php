@@ -444,4 +444,17 @@ class QueryBuilder extends \yii\db\QueryBuilder
             . $this->db->quoteColumnName($name) . ' CHECK (' . $this->db->quoteSql($expression) . ')' .
             ($enfoced ? '' : ' NOT ENFORCED');
     }
+
+    /**
+     * @inheritDoc
+     * @since 2.0.50
+     */
+    public function getColumnType($type)
+    {
+        if ($type instanceof ColumnSchemaBuilder && $type->getType() === Schema::TYPE_JSON) {
+            $type->check('[[{name}]] is null or json_valid([[{name}]])');
+        }
+
+        return parent::getColumnType($type);
+    }
 }

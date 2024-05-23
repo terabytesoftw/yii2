@@ -485,4 +485,14 @@ class ColumnSchemaBuilder extends BaseObject
         ];
         return strtr($format, $placeholderValues);
     }
+
+    /**
+     * Returns the category of the column type.
+     * @return string a string containing the column type category name.
+     * @since 2.0.50
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
 }

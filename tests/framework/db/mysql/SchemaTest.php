@@ -291,6 +291,10 @@ SQL;
             $this->expectException('yii\base\NotSupportedException');
         }
 
+        if (\stripos($version, 'mariadb') !== false && version_compare($version, '10.2.0', '<') && $type === 'checks') {
+            $this->expectException('yii\base\NotSupportedException');
+        }
+
         $constraints = $this->getConnection(false)->getSchema()->{'getTable' . ucfirst($type)}($tableName);
         $this->assertMetadataEquals($expected, $constraints);
     }
@@ -348,6 +352,10 @@ SQL;
             $this->expectException('yii\base\NotSupportedException');
         }
 
+        if (\stripos($version, 'mariadb') !== false && version_compare($version, '10.2.0', '<') && $type === 'checks') {
+            $this->expectException('yii\base\NotSupportedException');
+        }
+
         $connection = $this->getConnection(false);
         $connection->getSlavePdo(true)->setAttribute(\PDO::ATTR_CASE, \PDO::CASE_UPPER);
         $constraints = $connection->getSchema()->{'getTable' . ucfirst($type)}($tableName, true);
@@ -402,6 +410,10 @@ SQL;
         }
 
         if ($expected === false) {
+            $this->expectException('yii\base\NotSupportedException');
+        }
+
+        if (\stripos($version, 'mariadb') !== false && version_compare($version, '10.2.0', '<') && $type === 'checks') {
             $this->expectException('yii\base\NotSupportedException');
         }
 

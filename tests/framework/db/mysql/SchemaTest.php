@@ -236,4 +236,178 @@ SQL;
 
         return $columns;
     }
+
+    public function constraintsProviderMariaDb()
+    {
+        $result = $this->constraintsProvider();
+
+        $result['1: check'][2][0]->expression = "`C_check` <> ''";
+        $result['2: primary key'][2]->name = null;
+
+        return $result;
+    }
+
+    /**
+     * @dataProvider constraintsProvider
+     * @param string $tableName
+     * @param string $type
+     * @param mixed $expected
+     */
+    public function testTableSchemaConstraints($tableName, $type, $expected)
+    {
+        $version = $this->getConnection(false)->getServerVersion();
+
+        if (\stripos($version, 'mariadb') !== false) {
+            $this->markTestSkipped('Test is for MySQL only.');
+        }
+
+        if ($expected === false) {
+            $this->expectException('yii\base\NotSupportedException');
+        }
+
+        if (version_compare($version, '8.0.16', '<') && $type === 'checks') {
+            $this->expectException('yii\base\NotSupportedException');
+        }
+
+        $constraints = $this->getConnection(false)->getSchema()->{'getTable' . ucfirst($type)}($tableName);
+        $this->assertMetadataEquals($expected, $constraints);
+    }
+
+    /**
+     * @dataProvider constraintsProviderMariaDb
+     * @param string $tableName
+     * @param string $type
+     * @param mixed $expected
+     */
+    public function testTableSchemaConstraintsMariaDb($tableName, $type, $expected)
+    {
+        $version = $this->getConnection(false)->getServerVersion();
+
+        if (\stripos($version, 'mariadb') === false) {
+            $this->markTestSkipped('Test is for MariaDB only.');
+        }
+
+        if ($expected === false) {
+            $this->expectException('yii\base\NotSupportedException');
+        }
+
+        $constraints = $this->getConnection(false)->getSchema()->{'getTable' . ucfirst($type)}($tableName);
+        $this->assertMetadataEquals($expected, $constraints);
+    }
+
+    public function uppercaseConstraintsProviderMariaDb()
+    {
+        return $this->constraintsProviderMariaDb();
+    }
+
+    /**
+     * @dataProvider uppercaseConstraintsProvider
+     * @param string $tableName
+     * @param string $type
+     * @param mixed $expected
+     */
+    public function testTableSchemaConstraintsWithPdoUppercase($tableName, $type, $expected)
+    {
+        $version = $this->getConnection(false)->getServerVersion();
+
+        if (\stripos($version, 'mariadb') !== false) {
+            $this->markTestSkipped('Test is for MySQL only.');
+        }
+
+        if ($expected === false) {
+            $this->expectException('yii\base\NotSupportedException');
+        }
+
+        $version = $this->getConnection(false)->getServerVersion();
+
+        if (version_compare($version, '8.0.16', '<') && $type === 'checks') {
+            $this->expectException('yii\base\NotSupportedException');
+        }
+
+        $connection = $this->getConnection(false);
+        $connection->getSlavePdo(true)->setAttribute(\PDO::ATTR_CASE, \PDO::CASE_UPPER);
+        $constraints = $connection->getSchema()->{'getTable' . ucfirst($type)}($tableName, true);
+        $this->assertMetadataEquals($expected, $constraints);
+    }
+
+    /**
+     * @dataProvider uppercaseConstraintsProviderMariaDb
+     * @param string $tableName
+     * @param string $type
+     * @param mixed $expected
+     */
+    public function testTableSchemaConstraintsWithPdoUppercaseMariaDb($tableName, $type, $expected)
+    {
+        $version = $this->getConnection(false)->getServerVersion();
+
+        if (\stripos($version, 'mariadb') === false) {
+            $this->markTestSkipped('Test is for MariaDB only.');
+        }
+
+        if ($expected === false) {
+            $this->expectException('yii\base\NotSupportedException');
+        }
+
+        $connection = $this->getConnection(false);
+        $connection->getSlavePdo(true)->setAttribute(\PDO::ATTR_CASE, \PDO::CASE_UPPER);
+        $constraints = $connection->getSchema()->{'getTable' . ucfirst($type)}($tableName, true);
+        $this->assertMetadataEquals($expected, $constraints);
+    }
+
+    public function lowercaseConstraintsProviderMariaDb()
+    {
+       return $this->constraintsProviderMariaDb();
+    }
+
+    /**
+     * @dataProvider lowercaseConstraintsProvider
+     * @param string $tableName
+     * @param string $type
+     * @param mixed $expected
+     */
+    public function testTableSchemaConstraintsWithPdoLowercase($tableName, $type, $expected)
+    {
+        $version = $this->getConnection(false)->getServerVersion();
+
+        if (\stripos($version, 'mariadb') !== false) {
+            $this->markTestSkipped('Test is for MySQL only.');
+        }
+
+        if ($expected === false) {
+            $this->expectException('yii\base\NotSupportedException');
+        }
+
+        if (version_compare($version, '8.0.16', '<') && $type === 'checks') {
+            $this->expectException('yii\base\NotSupportedException');
+        }
+
+        $connection = $this->getConnection(false);
+        $connection->getSlavePdo(true)->setAttribute(\PDO::ATTR_CASE, \PDO::CASE_LOWER);
+        $constraints = $connection->getSchema()->{'getTable' . ucfirst($type)}($tableName, true);
+        $this->assertMetadataEquals($expected, $constraints);
+    }
+
+    /**
+     * @dataProvider lowercaseConstraintsProviderMariaDb
+     * @param string $tableName
+     * @param string $type
+     * @param mixed $expected
+     */
+    public function testTableSchemaConstraintsWithPdoLowercaseMariaDb($tableName, $type, $expected)
+    {
+        $version = $this->getConnection(false)->getServerVersion();
+
+        if (\stripos($version, 'mariadb') === false) {
+            $this->markTestSkipped('Test is for MariaDB only.');
+        }
+
+        if ($expected === false) {
+            $this->expectException('yii\base\NotSupportedException');
+        }
+
+        $connection = $this->getConnection(false);
+        $connection->getSlavePdo(true)->setAttribute(\PDO::ATTR_CASE, \PDO::CASE_LOWER);
+        $constraints = $connection->getSchema()->{'getTable' . ucfirst($type)}($tableName, true);
+        $this->assertMetadataEquals($expected, $constraints);
+    }
 }

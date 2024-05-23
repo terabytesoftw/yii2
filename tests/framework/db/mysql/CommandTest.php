@@ -46,7 +46,7 @@ class CommandTest extends \yiiunit\framework\db\CommandTest
             ['name' => 'check_int1_less_than_int2', 'expression' => '[[int1]] < [[int2]]', 'expected' => '(`int1` < `int2`)'],
         ];
 
-        if (str_contains($db->getServerVersion(), 'MariaDB')) {
+        if (stripos($db->getServerVersion(), 'mariadb') !== false) {
             $constraints[0]['expected'] = '`int1` > 0';
             $constraints[1]['expected'] = '`int2` <> 0';
             $constraints[2]['expected'] = '`int3` < 100';

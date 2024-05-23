@@ -205,15 +205,14 @@ SQL;
      */
     protected function loadTableChecks($tableName)
     {
+        $version = $this->db->getServerVersion();
+
         // check version MySQL >= 8.0.16
-        if (version_compare($this->db->getSlavePdo()->getAttribute(\PDO::ATTR_SERVER_VERSION), '8.0.16', '<')) {
+        if (\version_compare($version, '8.0.16', '<')) {
             throw new NotSupportedException('MySQL < 8.0.16 does not support check constraints.');
         }
 
-        if (
-            str_contains($this->db->getServerVersion(), 'MariaDB') &&
-            version_compare($this->db->getServerVersion(), '10.2.2', '<')
-        ) {
+        if (\stripos($version, 'mariadb') !== false && \version_compare($version, '10.2.2', '<')) {
             throw new NotSupportedException('MariaDB does not support check constraints.');
         }
 
@@ -227,7 +226,7 @@ SQL;
         WHERE tc.TABLE_NAME = :tableName AND tc.CONSTRAINT_TYPE = 'CHECK';
         SQL;
 
-        if (str_contains($this->db->getServerVersion(), 'MariaDB')) {
+        if (\stripos($version, 'mariadb') !== false) {
             $sql = <<<SQL
             SELECT cc.CONSTRAINT_NAME as constraint_name, cc.CHECK_CLAUSE as check_clause
             FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS tc

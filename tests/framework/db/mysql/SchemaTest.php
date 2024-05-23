@@ -152,8 +152,7 @@ SQL;
         if (\stripos($version, 'MariaDB') === false) {
             $expectedColumns = $this->getExpectedColumnsMysql($version);
         } else {
-            $version = \explode('-', $version);
-            $expectedColumns = $this->getExpectedColumnsMariaDb($version[0]);
+            $expectedColumns = $this->getExpectedColumnsMariaDb();
         }
 
         return array_merge(parent::getExpectedColumns(), $expectedColumns);
@@ -450,42 +449,42 @@ SQL;
     /**
      * @param string $version MySQL/MariaDB version.
      */
-    public function getExpectedColumnsMariaDb($version)
+    public function getExpectedColumnsMariaDb()
     {
         return [
             'int_col' => [
                 'type' => 'integer',
-                'dbType' => \version_compare($version, '10.2.1', '<') ? 'int' : 'int(11)',
+                'dbType' => 'int(11)',
                 'phpType' => 'integer',
                 'allowNull' => false,
                 'autoIncrement' => false,
                 'enumValues' => null,
-                'size' => \version_compare($version, '10.2.1', '<') ? null : 11,
-                'precision' => \version_compare($version, '10.2.1', '<') ? null : 11,
+                'size' => 11,
+                'precision' => 11,
                 'scale' => null,
                 'defaultValue' => null,
             ],
             'int_col3' => [
                 'type' => 'integer',
-                'dbType' => \version_compare($version, '10.2.1', '<') ? 'int unsigned' : 'int(11) unsigned',
+                'dbType' => 'int(11) unsigned',
                 'phpType' => 'integer',
                 'allowNull' => true,
                 'autoIncrement' => false,
                 'enumValues' => null,
-                'size' => \version_compare($version, '10.2.1', '<') ? null : 11,
-                'precision' => \version_compare($version, '10.2.1', '<') ? null : 11,
+                'size' => 11,
+                'precision' => 11,
                 'scale' => null,
                 'defaultValue' => 1,
             ],
             'bigint_col' => [
                 'type' => 'bigint',
-                'dbType' => \version_compare($version, '10.2.1', '<') ? 'bigint unsigned' : 'bigint(20) unsigned',
+                'dbType' => 'bigint(20) unsigned',
                 'phpType' => 'string',
                 'allowNull' => true,
                 'autoIncrement' => false,
                 'enumValues' => null,
-                'size' => \version_compare($version, '10.2.1', '<') ? null : 20,
-                'precision' => \version_compare($version, '10.2.1', '<') ? null : 20,
+                'size' => 20,
+                'precision' => 20,
                 'scale' => null,
                 'defaultValue' => null,
             ],

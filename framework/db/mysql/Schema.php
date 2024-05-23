@@ -208,7 +208,7 @@ SQL;
         $version = $this->db->getServerVersion();
 
         // check version MySQL >= 8.0.16
-        if (\version_compare($version, '8.0.16', '<')) {
+        if (\stripos($version, 'mariadb') === false && \version_compare($version, '8.0.16', '<')) {
             throw new NotSupportedException('MySQL < 8.0.16 does not support check constraints.');
         }
 

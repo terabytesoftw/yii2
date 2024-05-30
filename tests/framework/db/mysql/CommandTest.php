@@ -35,6 +35,7 @@ class CommandTest extends \yiiunit\framework\db\CommandTest
             'int1' => 'integer',
             'int2' => 'integer',
             'int3' => 'integer',
+            'int4' => 'integer',
         ])->execute();
 
         $this->assertEmpty($schema->getTableChecks($tableName, true));
@@ -58,7 +59,7 @@ class CommandTest extends \yiiunit\framework\db\CommandTest
         }
 
         $tableChecks = $schema->getTableChecks($tableName, true);
-        $this->assertCount(3, $tableChecks);
+        $this->assertCount(4, $tableChecks);
 
         foreach ($constraints as $index => $constraint) {
             $this->assertSame(

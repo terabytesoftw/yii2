@@ -205,9 +205,16 @@ SQL;
      */
     protected function loadTableChecks($tableName)
     {
+        $version = $this->db->getServerVersion();
+
         // check version MySQL >= 8.0.16
-        if (version_compare($this->db->getSlavePdo()->getAttribute(\PDO::ATTR_SERVER_VERSION), '8.0.16', '<')) {
+        if (\stripos($version, 'MariaDb') === false && \version_compare($version, '8.0.16', '<')) {
             throw new NotSupportedException('MySQL < 8.0.16 does not support check constraints.');
+        }
+
+        // check version MariaDB >= 10.2.2
+        if (\stripos($version, 'MariaDb') !== false && \version_compare($version, '10.2.2', '<')) {
+            throw new NotSupportedException('MariaDB does not support check constraints.');
         }
 
         $checks = [];
@@ -230,17 +237,9 @@ SQL;
         $tableRows = $this->normalizePdoRowKeyCase($tableRows, true);
 
         foreach ($tableRows as $tableRow) {
-            $matches = [];
-            $columnName = null;
-
-            if (preg_match('/\(`?([a-zA-Z0-9_]+)`?\s*[><=]/', $tableRow['check_clause'], $matches)) {
-                $columnName = $matches[1];
-            }
-
             $check = new CheckConstraint(
                 [
                     'name' => $tableRow['constraint_name'],
-                    'columnNames' => [$columnName],
                     'expression' => $tableRow['check_clause'],
                 ]
             );

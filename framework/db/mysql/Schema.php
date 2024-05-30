@@ -212,11 +212,6 @@ SQL;
             throw new NotSupportedException('MySQL < 8.0.16 does not support check constraints.');
         }
 
-        // check version MariaDB >= 10.2.2
-        if (\stripos($version, 'MariaDb') !== false && \version_compare($version, '10.2.2', '<')) {
-            throw new NotSupportedException('MariaDB does not support check constraints.');
-        }
-
         $checks = [];
 
         $sql = <<<SQL

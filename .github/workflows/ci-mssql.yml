@@ -30,7 +30,7 @@ jobs:
           - 8.4
 
         mssql:
-          - version: server:2012-latest
+          - version: server:2022-latest
             mssql-tool: /opt/mssql-tools18/bin/sqlcmd -C
 
         include:

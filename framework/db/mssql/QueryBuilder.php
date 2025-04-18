@@ -246,17 +246,17 @@ class QueryBuilder extends \yii\db\QueryBuilder
     {
         $table = $this->db->getTableSchema($tableName);
         if ($table !== null && $table->sequenceName !== null) {
-            $tableNameQuoted = $this->db->quoteTableName($tableName);
+            $tableName = $this->db->quoteTableName($tableName);
 
             if ($value === null) {
                 $key = $this->db->quoteColumnName(reset($table->primaryKey));
-                $sql = "SELECT COALESCE(MAX({$key}), 0) + 1 FROM {$tableNameQuoted}";
+                $sql = "(SELECT COALESCE(MAX({$key}),0) FROM {$tableName})+1";
                 $value = $this->db->createCommand($sql)->queryScalar();
             } else {
                 $value = (int) $value;
             }
 
-            return "DBCC CHECKIDENT ({$tableNameQuoted}, RESEED, {$value})";
+            return "DBCC CHECKIDENT ('{$tableName}', RESEED, {$value})";
         } elseif ($table === null) {
             throw new InvalidArgumentException("Table not found: $tableName");
         }

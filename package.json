@@ -9,7 +9,7 @@
   "dependencies": {
     "inputmask": "^5.0.8",
     "jquery-pjax": "^2.0.1",
-    "jquery": "^3.7.0",
+    "jquery": "^3.6.0",
     "punycode": "^1.4.0"
   },
   "devDependencies": {

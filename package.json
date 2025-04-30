@@ -10,7 +10,8 @@
     "inputmask": "^5.0.8",
     "jquery-pjax": "^2.0.1",
     "jquery": "~3.6.4",
-    "punycode": "^1.4.0"
+    "punycode": "^1.4.0",
+    "yii2-pjax": "^2.0.8"
   },
   "devDependencies": {
     "chai": "^3.5.0",

@@ -6,6 +6,12 @@
     "doc": "docs",
     "test": "tests/js/tests"
   },
+  "dependencies": {
+    "inputmask": "^5.0.8",
+    "jquery-pjax": "^2.0.1",
+    "jquery": "^3.7.0",
+    "punycode": "^1.4.0"
+  },
   "devDependencies": {
     "chai": "^3.5.0",
     "jsdom": "24.1.0",

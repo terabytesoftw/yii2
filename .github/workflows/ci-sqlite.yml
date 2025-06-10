@@ -31,11 +31,13 @@ jobs:
       - name: Install PHP with extensions.
         uses: shivammathur/setup-php@v2
         with:
-          coverage: pcov
+          coverage: xdebug
           extensions: ${{ env.EXTENSIONS }}
           ini-values: date.timezone='UTC'
           php-version: ${{ matrix.php }}
           tools: pie
+          env:
+            XDEBUG_VERSION: 3.3.2
 
       - name: Update composer.
         run: composer self-update

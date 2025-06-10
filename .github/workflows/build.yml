@@ -35,7 +35,7 @@ jobs:
         with:
           coverage: xdebug
           extensions: ${{ env.EXTENSIONS }}
-          ini-values: apc.enabled=1,apc.shm_size=32M,apc.enable_cli=1, date.timezone='UTC', session.save_path="${{ runner.temp }}"
+          ini-values: apc.enabled=1,apc.shm_size=32M,apc.enable_cli=1, date.timezone='UTC', xdebug.mode=coverage, session.save_path="${{ runner.temp }}"
           php-version: ${{ matrix.php }}
           tools: pie
 
@@ -45,16 +45,10 @@ jobs:
       - name: Install dependencies.
         run: composer update $DEFAULT_COMPOSER_FLAGS
 
-      - name: Run tests with PHPUnit and generate coverage.
-        if: matrix.php != '8.0'
+      - name: Run tests with PHPUnit.
         run: vendor/bin/phpunit --verbose --exclude-group $PHPUNIT_EXCLUDE_GROUP --coverage-clover=coverage.xml --colors=always
 
-      - name: Run tests with PHPUnit.
-        if: matrix.php == '8.0'
-        run: vendor/bin/phpunit --verbose --exclude-group $PHPUNIT_EXCLUDE_GROUP --colors=always
-
       - name: Upload coverage to Codecov.
-        if: matrix.php != '8.0'
         uses: codecov/codecov-action@v4
         with:
           token: ${{ secrets.CODECOV_TOKEN }}

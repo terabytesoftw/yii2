@@ -13,7 +13,7 @@ jobs:
     name: PHP ${{ matrix.php }}-${{ matrix.os }}
 
     env:
-      extensions: oci8, pdo, pdo_oci
+      extensions: oci8, pdo, pdo_oci, xdebug-3.3.2
       XDEBUG_MODE: coverage, develop
 
     runs-on: ${{ matrix.os }}
@@ -37,7 +37,7 @@ jobs:
       - name: Install PHP with extensions.
         uses: shivammathur/setup-php@v2
         with:
-          coverage: pcov
+          coverage: xdebug
           extensions: ${{ env.EXTENSIONS }}
           ini-values: date.timezone='UTC'
           php-version: ${{ matrix.php }}

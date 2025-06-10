@@ -13,7 +13,7 @@ jobs:
     name: PHP ${{ matrix.php }}-mssql-${{ matrix.mssql.version }}
 
     env:
-      EXTENSIONS: pdo, pdo_sqlsrv
+      EXTENSIONS: pdo, pdo_sqlsrv, xdebug-3.3.2
       XDEBUG_MODE: coverage, develop
 
     runs-on: ${{ matrix.mssql.os || 'ubuntu-latest' }}

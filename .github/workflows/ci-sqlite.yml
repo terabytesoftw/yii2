@@ -35,7 +35,7 @@ jobs:
           extensions: ${{ env.EXTENSIONS }}
           ini-values: date.timezone='UTC'
           php-version: ${{ matrix.php }}
-          tools: pecl
+          tools: pie
 
       - name: Update composer.
         run: composer self-update

@@ -12,7 +12,7 @@ jobs:
   tests:
     name: PHP ${{ matrix.php }}-pgsql-${{ matrix.pgsql }}
     env:
-      extensions: curl, intl, pdo, pdo_pgsql, xdebug-3.3.2
+      extensions: curl, intl, pdo, pdo_pgsql, ${{ matrix.php == '8.0' && 'xdebug-3.3.2' || 'xdebug' }}
       XDEBUG_MODE: coverage, develop
 
     runs-on: ubuntu-latest

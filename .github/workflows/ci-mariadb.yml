@@ -12,7 +12,7 @@ jobs:
   tests:
     name: PHP ${{ matrix.php }}-mariadb-${{ matrix.mariadb }}
     env:
-      extensions: curl, intl, pdo, pdo_mysql, xdebug-3.3.2
+      extensions: curl, intl, pdo, pdo_mysql, ${{ matrix.php == '8.0' && 'xdebug-3.3.2' || 'xdebug' }}
       XDEBUG_MODE: coverage, develop
 
     runs-on: Ubuntu 22.04
@@ -43,7 +43,7 @@ jobs:
       - name: Install PHP with extensions.
         uses: shivammathur/setup-php@v2
         with:
-          coverage: pcov
+          coverage: xdebug
           extensions: ${{ env.EXTENSIONS }}
           ini-values: date.timezone='UTC'
           php-version: ${{ matrix.php }}

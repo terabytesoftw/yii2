@@ -36,8 +36,8 @@ jobs:
           ini-values: date.timezone='UTC'
           php-version: ${{ matrix.php }}
           tools: pie
-          env:
-            XDEBUG_VERSION: 3.3.2
+        env:
+          XDEBUG_VERSION: 3.3.2
 
       - name: Update composer.
         run: composer self-update

@@ -59,7 +59,7 @@ jobs:
           extensions: ${{ matrix.extensions }}
           ini-values: apc.enabled=1,apc.shm_size=32M,apc.enable_cli=1, date.timezone='UTC', session.save_path="${{ runner.temp }}"
           php-version: ${{ matrix.php }}
-          tools: pecl
+          tools: pie
 
       - name: Install Memcached.
         uses: niden/actions-memcached@v7

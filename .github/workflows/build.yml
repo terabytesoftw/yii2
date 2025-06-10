@@ -33,9 +33,9 @@ jobs:
       - name: Install PHP.
         uses: shivammathur/setup-php@v2
         with:
-          coverage: xdebug
+          coverage: ${{ matrix.php < 8.1 && 'xdebug' || 'pcov' }}
           extensions: ${{ env.EXTENSIONS }}
-          ini-values: apc.enabled=1,apc.shm_size=32M,apc.enable_cli=1, date.timezone='UTC', xdebug.mode=coverage, session.save_path="${{ runner.temp }}"
+          ini-values: apc.enabled=1,apc.shm_size=32M,apc.enable_cli=1, date.timezone='UTC', session.save_path="${{ runner.temp }}"
           php-version: ${{ matrix.php }}
           tools: pie
 

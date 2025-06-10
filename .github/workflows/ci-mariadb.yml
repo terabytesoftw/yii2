@@ -41,7 +41,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install PHP with extensions.
-        uses: shivammathur/setup-php@v2.34.0
+        uses: shivammathur/setup-php@verbose
         with:
           coverage: xdebug
           extensions: ${{ env.EXTENSIONS }}

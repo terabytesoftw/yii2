@@ -91,7 +91,7 @@
             "yii\\": ""
         },
         "classmap": [
-           "Yii.php"
+            "framework/Yii.php"
         ]
     },
     "autoload-dev": {

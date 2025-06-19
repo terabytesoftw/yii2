@@ -87,7 +87,9 @@
         "yiisoft/yii2-coding-standards": "you can use this package to check for code style issues when contributing to yii"
     },
     "autoload": {
-        "psr-4": {"yii\\": ""},
+        "psr-4": {
+            "yii\\": ""
+        },
         "classmap": [
            "Yii.php"
         ]

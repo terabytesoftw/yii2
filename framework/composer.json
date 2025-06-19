@@ -74,6 +74,9 @@
     "autoload": {
         "psr-4": {"yii\\": ""}
     },
+    "autoload-dev": {
+        "psr-4": {"yiiunit\\": "tests/"}
+    },
     "bin": [
         "yii"
     ],

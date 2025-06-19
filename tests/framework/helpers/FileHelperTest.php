@@ -5,8 +5,6 @@
  * @license https://www.yiiframework.com/license/
  */
 
-namespace yiiunit\framework\helpers;
-
 use yii\helpers\FileHelper;
 use yii\helpers\VarDumper;
 use yiiunit\TestCase;

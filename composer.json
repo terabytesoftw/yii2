@@ -88,7 +88,7 @@
     },
     "autoload": {
         "psr-4": {
-            "yii\\": ""
+            "yii\\": "framework/"
         },
         "classmap": [
             "framework/Yii.php"

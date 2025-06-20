@@ -95,7 +95,16 @@
         "psr-4": {
             "yii\\build\\": "build/",
             "yiiunit\\": "tests/"
-        }
+        },
+        "exclude-from-classmap": [
+            "framework/caching/migrations/",
+            "framework/i18n/migrations/",
+            "framework/log/migrations/",
+            "framework/rbac/migrations/",
+            "framework/requirements/",
+            "framework/web/migrations/",
+            "tests/framework/helpers/FileHelperTest.php"
+        ]
     },
     "config": {
         "allow-plugins": {

@@ -103,7 +103,8 @@
             "framework/rbac/migrations/",
             "framework/requirements/",
             "framework/web/migrations/",
-            "tests/framework/helpers/FileHelperTest.php"
+            "tests/framework/helpers/FileHelperTest.php",
+            "tests/framework/requirements/YiiRequirementCheckerTest.php"
         ]
     },
     "config": {

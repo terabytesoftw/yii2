@@ -104,7 +104,8 @@
             "framework/requirements/",
             "framework/web/migrations/",
             "tests/framework/helpers/FileHelperTest.php",
-            "tests/framework/requirements/YiiRequirementCheckerTest.php"
+            "tests/framework/requirements/YiiRequirementCheckerTest.php",
+            "Yii.php"
         ]
     },
     "config": {

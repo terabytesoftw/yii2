@@ -102,7 +102,7 @@ class BaseYii
     {
         $yiiClassFile ??= dirname(__FILE__) . '/Yii.php';
 
-        spl_autoload_register(['static', 'autoload'], true, true);
+        spl_autoload_register([static::class, 'autoload'], true, true);
 
         if (static::$container === null) {
             static::$container = new Container();

@@ -49,6 +49,11 @@ defined('YII_ENV_TEST') or define('YII_ENV_TEST', YII_ENV === 'test');
 defined('YII_ENABLE_ERROR_HANDLER') or define('YII_ENABLE_ERROR_HANDLER', true);
 
 /**
+ * This constant defines whether the `classes.php` file map should be used for autoloading.
+ */
+defined('YII_CLASSMAP') or define('YII_CLASSMAP', false);
+
+/**
  * BaseYii is the core helper class for the Yii framework.
  *
  * Do not use BaseYii directly. Instead, use its child class [[\Yii]] which you can replace to
@@ -86,6 +91,29 @@ class BaseYii
      */
     public static $container;
 
+    /**
+     * Initializes the Yii class.
+     *
+     * @param string|null $yiiClassFile Path to the Yii class file, or `null` to use the default path.
+     *
+     * @return void
+     */
+    public static function init($yiiClassFile = null): void
+    {
+        $yiiClassFile ??= dirname(__FILE__) . '/Yii.php';
+
+        spl_autoload_register(['static', 'autoload'], true, true);
+
+        if (static::$container === null) {
+            static::$container = new Container();
+        }
+
+        static::$classMap = ['Yii' => $yiiClassFile];
+
+        if (YII_CLASSMAP) {
+            static::$classMap += require __DIR__ . '/classes.php';
+        }
+    }
 
     /**
      * Returns a string representing the current version of the Yii framework.

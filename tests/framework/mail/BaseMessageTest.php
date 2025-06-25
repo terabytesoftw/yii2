@@ -78,7 +78,7 @@ class BaseMessageTest extends TestCase
     public function testExceptionToStringLegacy()
     {
         if (PHP_VERSION_ID >= 70400) {
-            $this->markTestSkipped('This test is for PHP 7.4+ only');
+            $this->markTestSkipped('This test is for PHP < 7.4 only');
         }
 
         $message = new TestMessageWithException();

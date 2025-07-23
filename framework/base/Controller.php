@@ -131,8 +131,8 @@ class Controller extends Component implements ViewContextInterface
      * using the configuration provided here.
      * @return array
      *
-     * @phpstan-return array<string, class-string|array{class: class-string, ...}
-     * @psalm-return array<string, class-string|array{class: class-string, ...}
+     * @phpstan-return array<array-key, class-string|array{class: class-string, ...}>
+     * @psalm-return array<array-key, class-string|array{class: class-string, ...}>
      */
     public function actions()
     {
@@ -147,6 +147,9 @@ class Controller extends Component implements ViewContextInterface
      * @return mixed the result of the action.
      * @throws InvalidRouteException if the requested action ID cannot be resolved into an action successfully.
      * @see createAction()
+     *
+     * @phpstan-param array<array-key, mixed> $params
+     * @psalm-param array<array-key, mixed> $params
      */
     public function runAction($id, $params = [])
     {
@@ -187,7 +190,7 @@ class Controller extends Component implements ViewContextInterface
 
             // call afterAction on modules
             foreach ($modules as $module) {
-                /* @var $module Module */
+                /** @var Module $module */
                 $result = $module->afterAction($action, $result);
             }
         }
@@ -208,6 +211,9 @@ class Controller extends Component implements ViewContextInterface
      * @param array $params the parameters to be passed to the action.
      * @return mixed the result of the action.
      * @see runAction()
+     *
+     * @phpstan-param array<array-key, mixed> $params
+     * @psalm-param array<array-key, mixed> $params
      */
     public function run($route, $params = [])
     {
@@ -227,6 +233,15 @@ class Controller extends Component implements ViewContextInterface
      * @param Action $action the action to be bound with parameters.
      * @param array $params the parameters to be bound to the action.
      * @return array the valid parameters that the action can run with.
+     *
+     * @phpstan-param Action<static> $action
+     * @psalm-param Action<static> $action
+     *
+     * @phpstan-param array<array-key, mixed> $params
+     * @psalm-param array<array-key, mixed> $params
+     *
+     * @phpstan-return mixed[]
+     * @psalm-return mixed[]
      */
     public function bindActionParams($action, $params)
     {
@@ -296,6 +311,9 @@ class Controller extends Component implements ViewContextInterface
      *
      * @param Action $action the action to be executed.
      * @return bool whether the action should continue to run.
+     *
+     * @phpstan-param Action<static> $action
+     * @psalm-param Action<static> $action
      */
     public function beforeAction($action)
     {
@@ -324,6 +342,9 @@ class Controller extends Component implements ViewContextInterface
      * @param Action $action the action just executed.
      * @param mixed $result the action return result.
      * @return mixed the processed action result.
+     *
+     * @phpstan-param Action<static> $action
+     * @psalm-param Action<static> $action
      */
     public function afterAction($action, $result)
     {
@@ -407,6 +428,9 @@ class Controller extends Component implements ViewContextInterface
      * These parameters will not be available in the layout.
      * @return string the rendering result.
      * @throws InvalidArgumentException if the view file or the layout file does not exist.
+     *
+     * @phpstan-param array<string, mixed> $params
+     * @psalm-param array<string, mixed> $params
      */
     public function render($view, $params = [])
     {
@@ -438,6 +462,9 @@ class Controller extends Component implements ViewContextInterface
      * @param array $params the parameters (name-value pairs) that should be made available in the view.
      * @return string the rendering result.
      * @throws InvalidArgumentException if the view file does not exist.
+     *
+     * @phpstan-param array<string, mixed> $params
+     * @psalm-param array<string, mixed> $params
      */
     public function renderPartial($view, $params = [])
     {
@@ -450,6 +477,9 @@ class Controller extends Component implements ViewContextInterface
      * @param array $params the parameters (name-value pairs) that should be made available in the view.
      * @return string the rendering result.
      * @throws InvalidArgumentException if the view file does not exist.
+     *
+     * @phpstan-param array<string, mixed> $params
+     * @psalm-param array<string, mixed> $params
      */
     public function renderFile($file, $params = [])
     {

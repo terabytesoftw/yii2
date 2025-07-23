@@ -696,6 +696,16 @@ HTML;
         $this->assertStringContainsString('placeholder="pholder_both_direct"', (string) $widget);
     }
 
+    public function testExceptionToString()
+    {
+        $field = new TestActiveFieldWithException();
+
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('Test exception in toString.');
+
+        (string) $field;
+    }
+
     /**
      * Helper methods.
      */
@@ -801,5 +811,13 @@ class TestMaskedInput extends MaskedInput
             $this->options,
             array_keys($this->options)
         ));
+    }
+}
+
+class TestActiveFieldWithException extends ActiveField
+{
+    public function render($content = null)
+    {
+        throw new \Exception('Test exception in toString.');
     }
 }

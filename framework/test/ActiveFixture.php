@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @link https://www.yiiframework.com/
  * @copyright Copyright (c) 2008 Yii Software LLC
@@ -151,7 +150,7 @@ class ActiveFixture extends BaseActiveFixture
         $db = $this->db;
         $tableName = $this->tableName;
         if ($tableName === null) {
-            /* @var $modelClass \yii\db\ActiveRecord */
+            /** @var \yii\db\ActiveRecord $modelClass */
             $modelClass = $this->modelClass;
             $tableName = $modelClass::tableName();
         }

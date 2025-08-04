@@ -550,8 +550,13 @@ class FormatterNumberTest extends TestCase
         }
 
         // empty input
-        $this->assertSame('0.000000E+0', $this->formatter->asScientific(false));
-        $this->assertSame('0.000000E+0', $this->formatter->asScientific(''));
+        if (PHP_VERSION_ID >= 80500) {
+            $this->assertSame('0E+0', $this->formatter->asScientific(false));
+            $this->assertSame('0E+0', $this->formatter->asScientific(''));
+        } else {
+            $this->assertSame('0.000000E+0', $this->formatter->asScientific(false));
+            $this->assertSame('0.000000E+0', $this->formatter->asScientific(''));
+        }
 
         // null display
         $this->assertSame($this->formatter->nullDisplay, $this->formatter->asScientific(null));

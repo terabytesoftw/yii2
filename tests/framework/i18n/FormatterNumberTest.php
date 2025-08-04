@@ -537,13 +537,13 @@ class FormatterNumberTest extends TestCase
     {
         $this->assertSame('1.23E+2', $this->formatter->asScientific('123', 2));
 
-        if (PHP_VERSION_ID > 80400) {
+        if (PHP_VERSION_ID >= 80500) {
             $this->assertSame('1E+5', $this->formatter->asScientific('123456'));
         } else {
             $this->assertSame('1.234560E+5', $this->formatter->asScientific('123456'));
         }
 
-        if (PHP_VERSION_ID > 80400) {
+        if (PHP_VERSION_ID >= 80500) {
             $this->assertSame('-1E+5', $this->formatter->asScientific('-123456.123'));
         } else {
             $this->assertSame('-1.234561E+5', $this->formatter->asScientific('-123456.123'));

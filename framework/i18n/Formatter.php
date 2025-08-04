@@ -1278,7 +1278,9 @@ class Formatter extends Component
             return sprintf("%.{$decimals}E", $value);
         }
 
-        // PHP 8.5+ sprintf %.E removes trailing zeros, specify precision for backward compatibility
+        // PHP 8.5+ changed sprintf('%.E') behavior: empty precision now defaults to '0' instead of '6'
+        // Specify explicit precision to maintain backward compatibility
+        // @link https://github.com/php/php-src/commit/5ed8b2be5533fbd4db95d9724d268eb9c9741f14
         $format = PHP_VERSION_ID >= 80500 ? '%.6E' : '%.E';
 
         return sprintf($format, $value);

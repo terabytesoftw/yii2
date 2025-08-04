@@ -537,35 +537,25 @@ class FormatterNumberTest extends TestCase
     {
         $this->assertSame('1.23E+2', $this->formatter->asScientific('123', 2));
 
+        // PHP 8.5+ automatically removes trailing fractional zeros in scientific notation
         if (PHP_VERSION_ID >= 80500) {
             $this->assertSame('1E+5', $this->formatter->asScientific('123456'));
-        } else {
-            $this->assertSame('1.234560E+5', $this->formatter->asScientific('123456'));
-        }
-
-        if (PHP_VERSION_ID >= 80500) {
             $this->assertSame('-1E+5', $this->formatter->asScientific('-123456.123'));
-        } else {
-            $this->assertSame('-1.234561E+5', $this->formatter->asScientific('-123456.123'));
-        }
-
-        // empty input
-        if (PHP_VERSION_ID >= 80500) {
             $this->assertSame('0E+0', $this->formatter->asScientific(false));
             $this->assertSame('0E+0', $this->formatter->asScientific(''));
+
+            // Change in precision/rounding behavior for large numbers
+            $this->assertSame('9E+16', $this->formatter->asScientific('87654321098765436'));
         } else {
+            $this->assertSame('1.234560E+5', $this->formatter->asScientific('123456'));
+            $this->assertSame('-1.234561E+5', $this->formatter->asScientific('-123456.123'));
             $this->assertSame('0.000000E+0', $this->formatter->asScientific(false));
             $this->assertSame('0.000000E+0', $this->formatter->asScientific(''));
+            $this->assertSame('8.765432E+16', $this->formatter->asScientific('87654321098765436'));
         }
 
         // null display
         $this->assertSame($this->formatter->nullDisplay, $this->formatter->asScientific(null));
-
-        if (PHP_VERSION_ID >= 80500) {
-            $this->assertSame('9E+16', $this->formatter->asScientific('87654321098765436'));
-        } else {
-            $this->assertSame('8.765432E+16', $this->formatter->asScientific('87654321098765436'));
-        }
     }
 
     public function testAsSpellout()

@@ -561,7 +561,11 @@ class FormatterNumberTest extends TestCase
         // null display
         $this->assertSame($this->formatter->nullDisplay, $this->formatter->asScientific(null));
 
-        $this->assertSame('8.765432E+16', $this->formatter->asScientific('87654321098765436'));
+        if (PHP_VERSION_ID >= 80500) {
+            $this->assertSame('9E+16', $this->formatter->asScientific('87654321098765436'));
+        } else {
+            $this->assertSame('8.765432E+16', $this->formatter->asScientific('87654321098765436'));
+        }
     }
 
     public function testAsSpellout()

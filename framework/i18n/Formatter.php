@@ -1265,11 +1265,6 @@ class Formatter extends Component
         $value = $this->normalizeNumericValue($value);
 
         if ($this->_intlLoaded) {
-            // PHP 8.5+ compatibility: for legacy behavior when decimals is `null` (6 digits after decimal point)
-            if (PHP_VERSION_ID >= 80500 && $decimals === null) {
-                return sprintf('%.6E', $value);
-            }
-
             $f = $this->createNumberFormatter(NumberFormatter::SCIENTIFIC, $decimals, $options, $textOptions);
 
             if (($result = $f->format($value)) === false) {
@@ -1277,6 +1272,11 @@ class Formatter extends Component
             }
 
             return $result;
+        }
+
+        // PHP 8.5+ compatibility: for legacy behavior when decimals is `null` (6 digits after decimal point)
+        if (PHP_VERSION_ID >= 80500 && $decimals === null) {
+            return sprintf('%.6E', $value);
         }
 
         if ($decimals !== null) {

@@ -1265,13 +1265,12 @@ class Formatter extends Component
         $value = $this->normalizeNumericValue($value);
 
         if ($this->_intlLoaded) {
-            $f = $this->createNumberFormatter(NumberFormatter::SCIENTIFIC, $decimals, $options, $textOptions);
-
-            // PHP 8.5+ compatibility: explicit precision control
+            // PHP 8.5+ compatibility: for legacy behavior when decimals is `null` (6 digits after decimal point)
             if (PHP_VERSION_ID >= 80500 && $decimals === null) {
-                $f->setAttribute(NumberFormatter::MIN_FRACTION_DIGITS, 6);
-                $f->setAttribute(NumberFormatter::MAX_FRACTION_DIGITS, 6);
+                return sprintf('%.6E', $value);
             }
+
+            $f = $this->createNumberFormatter(NumberFormatter::SCIENTIFIC, $decimals, $options, $textOptions);
 
             if (($result = $f->format($value)) === false) {
                 throw new InvalidArgumentException('Formatting scientific number value failed: ' . $f->getErrorCode() . ' ' . $f->getErrorMessage());

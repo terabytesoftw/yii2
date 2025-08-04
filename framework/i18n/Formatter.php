@@ -1261,10 +1261,18 @@ class Formatter extends Component
         if ($value === null) {
             return $this->nullDisplay;
         }
+
         $value = $this->normalizeNumericValue($value);
 
         if ($this->_intlLoaded) {
             $f = $this->createNumberFormatter(NumberFormatter::SCIENTIFIC, $decimals, $options, $textOptions);
+
+            // PHP 8.5+ compatibility: explicit precision control
+            if (PHP_VERSION_ID >= 80500 && $decimals === null) {
+                $f->setAttribute(NumberFormatter::MIN_FRACTION_DIGITS, 6);
+                $f->setAttribute(NumberFormatter::MAX_FRACTION_DIGITS, 6);
+            }
+
             if (($result = $f->format($value)) === false) {
                 throw new InvalidArgumentException('Formatting scientific number value failed: ' . $f->getErrorCode() . ' ' . $f->getErrorMessage());
             }

@@ -536,7 +536,13 @@ class FormatterNumberTest extends TestCase
     public function testAsScientific()
     {
         $this->assertSame('1.23E+2', $this->formatter->asScientific('123', 2));
-        $this->assertSame('1.234560E+5', $this->formatter->asScientific('123456'));
+
+        if (PHP_VERSION_ID > 80400) {
+            $this->assertSame('1E+5', $this->formatter->asScientific('123456'));
+        } else {
+            $this->assertSame('1.234560E+5', $this->formatter->asScientific('123456'));
+        }
+
         $this->assertSame('-1.234561E+5', $this->formatter->asScientific('-123456.123'));
 
         // empty input

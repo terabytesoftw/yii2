@@ -1274,16 +1274,14 @@ class Formatter extends Component
             return $result;
         }
 
-        // PHP 8.5+ compatibility: for legacy behavior when decimals is `null` (6 digits after decimal point)
-        if (PHP_VERSION_ID >= 80500 && $decimals === null) {
-            return sprintf('%.6E', $value);
-        }
-
         if ($decimals !== null) {
             return sprintf("%.{$decimals}E", $value);
         }
 
-        return sprintf('%.E', $value);
+        // PHP 8.5+ sprintf %.E removes trailing zeros, specify precision for backward compatibility
+        $format = PHP_VERSION_ID >= 80500 ? '%.6E' : '%.E';
+
+        return sprintf($format, $value);
     }
 
     /**

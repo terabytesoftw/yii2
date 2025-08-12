@@ -463,7 +463,8 @@ abstract class Schema extends BaseObject
         if (
             mb_stripos((string)$this->db->dsn, 'odbc:') === false &&
             strpos($str, "\0") === false &&
-            ($value = $this->db->getSlavePdo(true)->quote($str)) !== false) {
+            ($value = $this->db->getSlavePdo(true)->quote($str)) !== false
+        ) {
             return $value;
         }
 

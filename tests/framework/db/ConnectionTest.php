@@ -568,6 +568,7 @@ abstract class ConnectionTest extends DatabaseTestCase
     {
         $connection = $this->getConnection(false);
 
-        $this->assertEquals("'Hola'", $connection->quoteValue("Hola\0Mundo"));
+        $this->assertSame("'foo'", $connection->quoteValue("foo\0bar"));
+        $this->assertSame("'foo'", $connection->quoteValue("foo\x00bar"));
     }
 }

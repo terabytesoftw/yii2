@@ -78,6 +78,6 @@ class ConnectionTest extends \yiiunit\framework\db\ConnectionTest
     {
         $connection = $this->getConnection(false);
 
-        $this->assertEquals('', $connection->quoteValue("Hola\0Mundo"));
+        $this->assertEquals("'Hola\0Mundo'", $connection->quoteValue("Hola\0Mundo"));
     }
 }

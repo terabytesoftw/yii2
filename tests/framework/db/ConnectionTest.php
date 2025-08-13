@@ -122,6 +122,13 @@ abstract class ConnectionTest extends DatabaseTestCase
         $this->assertEquals("'It\\'s interesting'", $connection->quoteValue("It's interesting"));
     }
 
+    public function testQuoteValueWithNullByte()
+    {
+        $connection = $this->getConnection(false);
+
+        $this->assertEquals("'Hola\\0Mundo'", $connection->quoteValue("Hola\0Mundo"));
+    }
+
     public function testQuoteTableName()
     {
         $connection = $this->getConnection(false, false);

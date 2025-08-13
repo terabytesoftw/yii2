@@ -457,12 +457,8 @@ abstract class Schema extends BaseObject
         if (!is_string($str)) {
             return $str;
         }
-
-        // PHP 8.5, PDO::quote() throws if the string contains a null byte (\0).
-        // @link https://github.com/php/php-src/commit/0a10f6db26875e0f1d0f867307cee591d29a43c7
         if (
             mb_stripos((string)$this->db->dsn, 'odbc:') === false &&
-            strpos($str, "\0") === false &&
             ($value = $this->db->getSlavePdo(true)->quote($str)) !== false
         ) {
             return $value;

@@ -39,6 +39,6 @@ class ConnectionTest extends \yiiunit\framework\db\ConnectionTest
         $connection = $this->getConnection(false);
 
         $this->assertSame("'foo\\0bar'", $connection->quoteValue("foo\0bar"));
-        $this->assertSame("'foo\\x00bar'", $connection->quoteValue("foo\x00bar"));
+        $this->assertSame("'foo\0bar'", $connection->quoteValue("foo\x00bar"));
     }
 }

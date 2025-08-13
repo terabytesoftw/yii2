@@ -33,4 +33,11 @@ class ConnectionTest extends \yiiunit\framework\db\ConnectionTest
         });
         // If we made it this far without an error, then everything's working
     }
+
+    public function testQuoteValueWithNullByte()
+    {
+        $connection = $this->getConnection(false);
+
+        $this->assertEquals("'Hola\\0Mundo'", $connection->quoteValue("Hola\0Mundo"));
+    }
 }

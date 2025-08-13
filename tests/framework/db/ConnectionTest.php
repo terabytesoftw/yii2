@@ -563,4 +563,11 @@ abstract class ConnectionTest extends DatabaseTestCase
         $this->assertFalse($cache->exists($cacheKey), 'Caching is disabled');
         $connection->close();
     }
+
+    public function testQuoteValueWithNullByte()
+    {
+        $connection = $this->getConnection(false);
+
+        $this->assertEquals("'Hola'", $connection->quoteValue("Hola\0Mundo"));
+    }
 }

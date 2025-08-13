@@ -73,4 +73,11 @@ class ConnectionTest extends \yiiunit\framework\db\ConnectionTest
         $this->assertEquals('[table].[column]', $connection->quoteSql('{{%table}}.[[column]]'));
         $this->assertEquals('[table].[column]', $connection->quoteSql('{{%table}}.[column]'));
     }
+
+    public function testQuoteValueWithNullByte()
+    {
+        $connection = $this->getConnection(false);
+
+        $this->assertEquals('', $connection->quoteValue("Hola\0Mundo"));
+    }
 }

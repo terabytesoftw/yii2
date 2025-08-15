@@ -53,8 +53,7 @@ class HttpCacheTest extends \yiiunit\TestCase
         $httpCache = new HttpCache();
         $request = Yii::$app->getRequest();
 
-        $method = new \ReflectionMethod($httpCache, 'validateCache');
-        $method->setAccessible(true);
+        $method = $this->invokeMethod($httpCache, 'validateCache');
 
         $request->headers->remove('If-Modified-Since');
         $request->headers->remove('If-None-Match');

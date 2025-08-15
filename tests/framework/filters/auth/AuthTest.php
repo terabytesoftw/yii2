@@ -151,9 +151,8 @@ class AuthTest extends \yiiunit\TestCase
     {
         /** @var AuthMethod $filter */
         $filter = new $authClass();
-        $reflection = new \ReflectionClass($filter);
-        $method = $reflection->getMethod('isActive');
-        $method->setAccessible(true);
+
+        $method = $this->invokeMethod($filter, 'isActive');
 
         $controller = new \yii\web\Controller('test', Yii::$app);
 

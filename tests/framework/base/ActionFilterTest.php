@@ -109,9 +109,8 @@ class ActionFilterTest extends TestCase
 
         /** @var ActionFilter $filter */
         $filter = Yii::createObject($filterClass);
-        $reflection = new \ReflectionClass($filter);
-        $method = $reflection->getMethod('isActive');
-        $method->setAccessible(true);
+
+        $method = $this->invokeMethod($filter, 'isActive');
 
         $controller = new \yii\web\Controller('test', Yii::$app);
 
@@ -143,9 +142,8 @@ class ActionFilterTest extends TestCase
         $this->mockWebApplication();
 
         $filter = new ActionFilter();
-        $reflection = new \ReflectionClass($filter);
-        $method = $reflection->getMethod('isActive');
-        $method->setAccessible(true);
+
+        $method = $this->invokeMethod($filter, 'isActive');
 
         $controller = new \yii\web\Controller('test', Yii::$app);
 

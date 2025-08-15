@@ -109,8 +109,13 @@ class ActionFilterTest extends TestCase
 
         /** @var ActionFilter $filter */
         $filter = Yii::createObject($filterClass);
+        $reflection = new \ReflectionClass($filter);
+        $method = $reflection->getMethod('isActive');
 
-        $method = $this->invokeMethod($filter, 'isActive');
+        // @link https://wiki.php.net/rfc/deprecations_php_8_5#deprecate_reflectionsetaccessible
+        if (PHP_VERSION_ID < 80500) {
+            $method->setAccessible(true);
+        }
 
         $controller = new \yii\web\Controller('test', Yii::$app);
 
@@ -142,8 +147,13 @@ class ActionFilterTest extends TestCase
         $this->mockWebApplication();
 
         $filter = new ActionFilter();
+        $reflection = new \ReflectionClass($filter);
+        $method = $reflection->getMethod('isActive');
 
-        $method = $this->invokeMethod($filter, 'isActive');
+        // @link https://wiki.php.net/rfc/deprecations_php_8_5#deprecate_reflectionsetaccessible
+        if (PHP_VERSION_ID < 80500) {
+            $method->setAccessible(true);
+        }
 
         $controller = new \yii\web\Controller('test', Yii::$app);
 

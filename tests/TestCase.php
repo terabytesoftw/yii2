@@ -201,11 +201,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
             $method->setAccessible(true);
         }
 
-        if ($args === []) {
-            $result = $method->invoke($object);
-        } else {
-            $result = $method->invokeArgs($object, $args);
-        }
+        $result = $method->invokeArgs($object, $args);
 
         // @link https://wiki.php.net/rfc/deprecations_php_8_5#deprecate_reflectionsetaccessible
         if ($revoke && PHP_VERSION_ID < 80500) {

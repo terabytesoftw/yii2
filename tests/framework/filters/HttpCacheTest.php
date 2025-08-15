@@ -56,7 +56,7 @@ class HttpCacheTest extends \yiiunit\TestCase
 
         // @link https://wiki.php.net/rfc/deprecations_php_8_5#deprecate_reflectionsetaccessible
         if (PHP_VERSION_ID < 80500) {
-            $method->setAccessible(false);
+            $method->setAccessible(true);
         }
 
         $request->headers->remove('If-Modified-Since');

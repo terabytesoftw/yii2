@@ -226,7 +226,12 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
             $class = $class->getParentClass();
         }
         $property = $class->getProperty($propertyName);
-        $property->setAccessible(true);
+
+        // @link https://wiki.php.net/rfc/deprecations_php_8_5#deprecate_reflectionsetaccessible
+        if (PHP_VERSION_ID < 80500) {
+            $property->setAccessible(true);
+        }
+
         $property->setValue($object, $value);
         if ($revoke) {
             $property->setAccessible(false);
@@ -247,7 +252,12 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
             $class = $class->getParentClass();
         }
         $property = $class->getProperty($propertyName);
-        $property->setAccessible(true);
+
+        // @link https://wiki.php.net/rfc/deprecations_php_8_5#deprecate_reflectionsetaccessible
+        if (PHP_VERSION_ID < 80500) {
+            $property->setAccessible(true);
+        }
+
         $result = $property->getValue($object);
         if ($revoke) {
             $property->setAccessible(false);

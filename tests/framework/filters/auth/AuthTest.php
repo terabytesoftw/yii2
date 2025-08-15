@@ -151,8 +151,13 @@ class AuthTest extends \yiiunit\TestCase
     {
         /** @var AuthMethod $filter */
         $filter = new $authClass();
+        $reflection = new \ReflectionClass($filter);
+        $method = $reflection->getMethod('isActive');
 
-        $method = $this->invokeMethod($filter, 'isActive');
+        // @link https://wiki.php.net/rfc/deprecations_php_8_5#deprecate_reflectionsetaccessible
+        if (PHP_VERSION_ID < 80500) {
+            $method->setAccessible(false);
+        }
 
         $controller = new \yii\web\Controller('test', Yii::$app);
 

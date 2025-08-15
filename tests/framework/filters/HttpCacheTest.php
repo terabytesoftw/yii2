@@ -52,6 +52,12 @@ class HttpCacheTest extends \yiiunit\TestCase
     {
         $httpCache = new HttpCache();
         $request = Yii::$app->getRequest();
+        $method = new \ReflectionMethod($httpCache, 'validateCache');
+
+        // @link https://wiki.php.net/rfc/deprecations_php_8_5#deprecate_reflectionsetaccessible
+        if (PHP_VERSION_ID < 80500) {
+            $method->setAccessible(false);
+        }
 
         $method = $this->invokeMethod($httpCache, 'validateCache');
 

@@ -59,8 +59,6 @@ class HttpCacheTest extends \yiiunit\TestCase
             $method->setAccessible(false);
         }
 
-        $method = $this->invokeMethod($httpCache, 'validateCache');
-
         $request->headers->remove('If-Modified-Since');
         $request->headers->remove('If-None-Match');
         $this->assertFalse($method->invoke($httpCache, null, null));

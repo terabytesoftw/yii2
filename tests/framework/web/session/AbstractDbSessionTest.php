@@ -9,6 +9,7 @@ namespace yiiunit\framework\web\session;
 
 use Yii;
 use yii\db\Connection;
+use yii\db\Exception;
 use yii\db\Migration;
 use yii\db\Query;
 use yii\web\DbSession;
@@ -268,6 +269,28 @@ abstract class AbstractDbSessionTest extends TestCase
         Yii::$app->set('db', Yii::$app->sessionDb);
         Yii::$app->set('sessionDb', null);
         ini_set('session.gc_maxlifetime', $oldTimeout);
+    }
+
+    public function testStrictModeWithCharAndNcharColumns()
+    {
+        $session = new DbSession([
+            'useStrictMode' => true,
+        ]);
+
+        try {
+            $session->open();
+            $session->regenerateID(true);
+            $session->close();
+
+            $this->assertTrue(true, 'Session with strict mode should work without SQL syntax errors');
+
+        } catch (Exception $e) {
+            if (strpos($e->getMessage(), 'Incorrect syntax near the keyword \'nchar\'') !== false) {
+                $this->fail('The char/nchar MAX fix is not working properly. Error: ' . $e->getMessage());
+            }
+
+            throw $e;
+        }
     }
 
     public function testInitUseStrictMode()

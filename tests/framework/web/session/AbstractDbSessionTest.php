@@ -283,7 +283,7 @@ abstract class AbstractDbSessionTest extends TestCase
 
         $session->open();
         $session->regenerateID(true);
-        $session->close();)
+        $session->close();
     }
 
     public function testInitUseStrictMode()

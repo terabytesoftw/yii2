@@ -273,24 +273,17 @@ abstract class AbstractDbSessionTest extends TestCase
 
     public function testStrictModeWithCharAndNcharColumns()
     {
+        var_dump('Testing strict mode with char/nchar columns...');
+
         $session = new DbSession([
             'useStrictMode' => true,
         ]);
 
-        try {
-            $session->open();
-            $session->regenerateID(true);
-            $session->close();
+        $this->expectNotToPerformAssertions();
 
-            $this->assertTrue(true, 'Session with strict mode should work without SQL syntax errors');
-
-        } catch (Exception $e) {
-            if (strpos($e->getMessage(), 'Incorrect syntax near the keyword \'nchar\'') !== false) {
-                $this->fail('The char/nchar MAX fix is not working properly. Error: ' . $e->getMessage());
-            }
-
-            throw $e;
-        }
+        $session->open();
+        $session->regenerateID(true);
+        $session->close();)
     }
 
     public function testInitUseStrictMode()

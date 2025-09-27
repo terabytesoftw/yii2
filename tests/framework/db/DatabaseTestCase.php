@@ -33,9 +33,15 @@ abstract class DatabaseTestCase extends TestCase
         parent::setUp();
         $databases = self::getParam('databases');
         $this->database = $databases[$this->driverName];
+
         $pdo_database = 'pdo_' . $this->driverName;
+
         if ($this->driverName === 'oci') {
             $pdo_database = 'oci8';
+        }
+
+        if ($this->driverName === 'cubrid') {
+            $pdo_database = 'cubrid';
         }
 
         if (!\extension_loaded('pdo') || !\extension_loaded($pdo_database)) {

@@ -49,19 +49,25 @@ jobs:
 
       - name: Verify CUBRID extension (backup compilation if needed)
         run: |
-          if ! php -m | grep -q "cubrid"; then
-            echo "CUBRID not found via setup-php, compiling from source..."
+          echo "Checking for CUBRID extensions..."
+          php -m | grep -i cubrid || echo "No CUBRID extensions found"
 
-            git clone https://github.com/CUBRID/cubrid-php.git
-            cd cubrid-php
+          if ! php -r "print_r(PDO::getAvailableDrivers());" | grep -q "cubrid"; then
+            echo "PDO_CUBRID not found, compiling from official source..."
+
+            source $GITHUB_ENV
+
+            git clone https://github.com/CUBRID/cubrid-pdo.git
+            cd cubrid-pdo
             phpize
-            ./configure
+            ./configure --with-pdo-cubrid=/opt/CUBRID
             make && sudo make install
 
-            echo "extension=cubrid.so" | sudo tee -a $(php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||")
+            echo "extension=pdo_cubrid.so" | sudo tee -a $(php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||")
           fi
 
-          php -m | grep cubrid
+          echo "Available PDO drivers:"
+          php -r "print_r(PDO::getAvailableDrivers());"
 
       - name: Update composer.
         run: composer self-update

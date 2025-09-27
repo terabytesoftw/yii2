@@ -57,8 +57,17 @@ jobs:
 
             source $GITHUB_ENV
 
-            git clone https://github.com/CUBRID/cubrid-pdo.git
+            git clone --recursive https://github.com/CUBRID/cubrid-pdo.git
             cd cubrid-pdo
+
+            ls -la cci-src/
+            if [ ! -f cci-src/src/cci/cas_cci.h ]; then
+              echo "Submodule not properly cloned, fixing..."
+              git submodule update --init --recursive
+            fi
+
+            ls -la cci-src/src/cci/
+
             phpize
             ./configure --with-pdo-cubrid=/opt/CUBRID
             make && sudo make install

@@ -380,6 +380,18 @@ class Schema extends \yii\db\Schema implements ConstraintFinderInterface
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function quoteValue($str)
+    {
+        if (PHP_VERSION_ID >= 80500) {
+            $str = $this->sanitizeNullBytes($str);
+        }
+
+        return parent::quoteValue($str);
+    }
+
+    /**
      * Returns table columns info.
      * @param string $tableName table name
      * @return array
@@ -483,5 +495,23 @@ class Schema extends \yii\db\Schema implements ConstraintFinderInterface
     private function isSystemIdentifier($identifier)
     {
         return strncmp($identifier, 'sqlite_', 7) === 0;
+    }
+
+    /**
+     * Sanitizes `null` bytes from strings for SQLite compatibility.
+     *
+     * SQLite {@see PDO::quote()} silently truncates strings at `null` bytes in PHP < `8.5`.
+     *
+     * @param string $str the string to sanitize
+     *
+     * @return string the sanitized string
+     *
+     * @since 2.0.54
+     *
+     * @link https://github.com/php/php-src/issues/13952
+     */
+    private function sanitizeNullBytes(string $str): string
+    {
+        return str_replace("\x00", '', $str);
     }
 }

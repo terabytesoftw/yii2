@@ -13,7 +13,7 @@ jobs:
     name: PHP ${{ matrix.php }}
 
     env:
-      EXTENSIONS: pdo, cubrid, ${{ matrix.php == '8.0' && 'xdebug-3.3.2' || 'xdebug' }}
+      EXTENSIONS: pdo, 'xdebug'
       XDEBUG_MODE: coverage
 
     runs-on: ubuntu-latest
@@ -46,6 +46,22 @@ jobs:
           ini-values: date.timezone='UTC'
           php-version: ${{ matrix.php }}
           tools: pecl
+
+      - name: Verify CUBRID extension (backup compilation if needed)
+        run: |
+          if ! php -m | grep -q "cubrid"; then
+            echo "CUBRID not found via setup-php, compiling from source..."
+
+            git clone https://github.com/CUBRID/cubrid-php.git
+            cd cubrid-php
+            phpize
+            ./configure
+            make && sudo make install
+
+            echo "extension=cubrid.so" | sudo tee -a $(php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||")
+          fi
+
+          php -m | grep cubrid
 
       - name: Update composer.
         run: composer self-update

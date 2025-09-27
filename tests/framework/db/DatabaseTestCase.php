@@ -40,10 +40,6 @@ abstract class DatabaseTestCase extends TestCase
             $pdo_database = 'oci8';
         }
 
-        if ($this->driverName === 'cubrid') {
-            $pdo_database = 'cubrid';
-        }
-
         if (!\extension_loaded('pdo') || !\extension_loaded($pdo_database)) {
             $this->markTestSkipped('pdo and ' . $pdo_database . ' extension are required.');
         }

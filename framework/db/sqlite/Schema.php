@@ -384,7 +384,7 @@ class Schema extends \yii\db\Schema implements ConstraintFinderInterface
      */
     public function quoteValue($str)
     {
-        if (PHP_VERSION_ID >= 80500) {
+        if (PHP_VERSION_ID >= 80500 && strpos($str, "\x00") !== false) {
             $str = $this->sanitizeNullBytes($str);
         }
 

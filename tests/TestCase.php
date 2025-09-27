@@ -185,7 +185,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
      * @param $string
      * @return array|string|null
      */
-    protected function sanitizeWhitespaces($string): array|string|null
+    protected function sanitizeWhitespaces($string)
     {
         return preg_replace("/[\pZ\pC]/u", " ", $string);
     }

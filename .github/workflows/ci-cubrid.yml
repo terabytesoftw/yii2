@@ -13,7 +13,7 @@ jobs:
     name: PHP ${{ matrix.php }}
 
     env:
-      EXTENSIONS: pdo, pdo_cubrid, ${{ matrix.php == '8.0' && 'xdebug-3.3.2' || 'xdebug' }}
+      EXTENSIONS: pdo, cubrid, ${{ matrix.php == '8.0' && 'xdebug-3.3.2' || 'xdebug' }}
       XDEBUG_MODE: coverage
 
     runs-on: ubuntu-latest

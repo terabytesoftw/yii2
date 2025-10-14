@@ -53,9 +53,7 @@ namespace yiiunit\framework\log {
          */
         protected function setUp(): void
         {
-            $this->syslogTarget = $this->getMockBuilder('yii\\log\\SyslogTarget')
-                ->setMethods(['getMessagePrefix'])
-                ->getMock();
+            $this->syslogTarget = $this->createPartialMock('yii\\log\\SyslogTarget', ['getMessagePrefix']);
         }
 
         /**
@@ -75,9 +73,15 @@ namespace yiiunit\framework\log {
                 ['profile begin message', Logger::LEVEL_PROFILE_BEGIN],
                 ['profile end message', Logger::LEVEL_PROFILE_END],
             ];
-            $syslogTarget = $this->getMockBuilder('yii\\log\\SyslogTarget')
-                ->setMethods(['openlog', 'syslog', 'formatMessage', 'closelog'])
-                ->getMock();
+            $syslogTarget = $this->createPartialMock(
+                'yii\\log\\SyslogTarget',
+                [
+                    'openlog',
+                    'syslog',
+                    'formatMessage',
+                    'closelog',
+                ],
+            );
 
             $syslogTarget->identity = $identity;
             $syslogTarget->options = $options;
@@ -151,9 +155,15 @@ namespace yiiunit\framework\log {
          */
         public function testFailedExport(): void
         {
-            $syslogTarget = $this->getMockBuilder('yii\\log\\SyslogTarget')
-                ->setMethods(['openlog', 'syslog', 'formatMessage', 'closelog'])
-                ->getMock();
+            $syslogTarget = $this->createPartialMock(
+                'yii\\log\\SyslogTarget',
+                [
+                    'openlog',
+                    'syslog',
+                    'formatMessage',
+                    'closelog',
+                ],
+            );
             $syslogTarget->method('syslog')->willReturn(false);
 
             $syslogTarget->identity = 'identity string';

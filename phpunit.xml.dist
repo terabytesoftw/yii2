@@ -10,7 +10,6 @@
     executionOrder="default"
     failOnRisky="true"
     failOnWarning="true"
-    printerClass="yiiunit\ResultPrinter"
     stopOnFailure="false"
 >
     <testsuites>

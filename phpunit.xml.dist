@@ -11,6 +11,7 @@
     failOnRisky="true"
     failOnWarning="true"
     stopOnFailure="false"
+    stderr="true"
 >
     <testsuites>
 		<testsuite name="Yii Test Suite">

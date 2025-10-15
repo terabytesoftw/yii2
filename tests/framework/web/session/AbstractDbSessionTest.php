@@ -21,8 +21,6 @@ use yiiunit\TestCase;
 
 /**
  * @group db
- * @preserveGlobalState disabled
- * @runTestsInSeparateProcesses
  */
 abstract class AbstractDbSessionTest extends TestCase
 {

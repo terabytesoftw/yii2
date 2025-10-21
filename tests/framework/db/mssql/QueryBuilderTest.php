@@ -843,7 +843,7 @@ ALTER TABLE [foo1] DROP COLUMN [bar]";
         $this->assertEquals(null, $schema->getColumn('bar'));
     }
 
-    public function buildFromDataProvider()
+    public static function buildFromDataProvider(): array
     {
         $data = parent::buildFromDataProvider();
         $data[] = ['[test]', '[[test]]'];

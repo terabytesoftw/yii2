@@ -1306,7 +1306,7 @@ abstract class QueryBuilderTest extends DatabaseTestCase
         $this->assertEquals('FROM ' . $this->replaceQuotes($expected), $sql);
     }
 
-    public function buildFromDataProvider()
+    public static function buildFromDataProvider(): array
     {
         return [
             ['test t1', '[[test]] [[t1]]'],

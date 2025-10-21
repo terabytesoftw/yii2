@@ -1244,9 +1244,9 @@ abstract class QueryBuilderTest extends DatabaseTestCase
         ];
     }
 
-    public function filterConditionProvider()
+    public static function filterConditionProvider(): array
     {
-        $conditions = [
+        return [
             // like
             [['like', 'name', []], '', []],
             [['not like', 'name', []], '', []],
@@ -1284,13 +1284,6 @@ abstract class QueryBuilderTest extends DatabaseTestCase
             [['<>', 'a', ''], '', []],
             [['!=', 'a', ''], '', []],
         ];
-
-        // adjust dbms specific escaping
-        foreach ($conditions as $i => $condition) {
-            $conditions[$i][1] = $this->replaceQuotes($condition[1]);
-        }
-
-        return $conditions;
     }
 
     /**

@@ -15,7 +15,6 @@ use yii\db\JsonExpression;
 use yii\db\Query;
 use yii\db\Schema;
 use yiiunit\data\base\TraversableObject;
-use yiiunit\framework\support\DbHelper;
 
 /**
  * @group db

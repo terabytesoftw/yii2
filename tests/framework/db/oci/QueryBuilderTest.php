@@ -17,7 +17,6 @@ use yii\db\oci\Schema;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
 use yiiunit\data\base\TraversableObject;
-use yiiunit\framework\support\DbHelper;
 
 /**
  * @group db

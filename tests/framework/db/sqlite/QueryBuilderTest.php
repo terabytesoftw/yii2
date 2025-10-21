@@ -8,13 +8,14 @@
 
 namespace yiiunit\framework\db\sqlite;
 
+use Closure;
 use PDO;
+use yii\base\NotSupportedException;
 use yii\db\Expression;
 use yii\db\Query;
 use yii\db\Schema;
 use yii\db\sqlite\QueryBuilder;
 use yiiunit\data\base\TraversableObject;
-use yiiunit\framework\support\DbHelper;
 
 /**
  * @group db
@@ -91,11 +92,6 @@ class QueryBuilderTest extends \yiiunit\framework\db\QueryBuilderTest
                 ],
             ],
         );
-    }
-
-    public function primaryKeysProvider(): void
-    {
-        $this->markTestSkipped('Adding/dropping primary keys is not supported in SQLite.');
     }
 
     public function foreignKeysProvider(): void
@@ -286,5 +282,17 @@ class QueryBuilderTest extends \yiiunit\framework\db\QueryBuilderTest
             $newData[$testName] = array_replace($newData[$testName], $data);
         }
         return $newData;
+    }
+
+    /**
+     * @dataProvider primaryKeysProvider
+     * @param string $sql
+     */
+    public function testAddDropPrimaryKey($sql, Closure $builder): void
+    {
+        $this->expectException(NotSupportedException::class);
+        $this->expectExceptionMessageMatches('/^.*::(addPrimaryKey|dropPrimaryKey) is not supported by SQLite\.$/');
+
+        $builder($this->getQueryBuilder(false));
     }
 }

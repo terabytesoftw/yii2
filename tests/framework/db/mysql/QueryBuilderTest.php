@@ -14,7 +14,6 @@ use yii\db\Expression;
 use yii\db\JsonExpression;
 use yii\db\Query;
 use yii\db\Schema;
-use yiiunit\framework\support\DbHelper;
 
 /**
  * @group db
@@ -166,7 +165,7 @@ class QueryBuilderTest extends \yiiunit\framework\db\QueryBuilderTest
         return $columns;
     }
 
-    public function primaryKeysProvider()
+    public static function primaryKeysProvider(): array
     {
         $result = parent::primaryKeysProvider();
         $result['drop'][0] = 'ALTER TABLE {{T_constraints_1}} DROP PRIMARY KEY';

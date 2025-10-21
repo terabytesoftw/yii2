@@ -11,7 +11,6 @@ namespace yiiunit\framework\db\mssql;
 use yii\db\Expression;
 use yii\db\Query;
 use yiiunit\data\base\TraversableObject;
-use yiiunit\framework\support\DbHelper;
 
 /**
  * @group db

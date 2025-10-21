@@ -1338,7 +1338,7 @@ abstract class QueryBuilderTest extends DatabaseTestCase
         $this->assertEquals($expectedParams, $params);
     }
 
-    public function primaryKeysProvider()
+    public static function primaryKeysProvider(): array
     {
         $tableName = 'T_constraints_1';
         $name = 'CN_pk';

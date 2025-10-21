@@ -70,7 +70,7 @@ class QueryBuilderTest extends \yiiunit\framework\db\QueryBuilderTest
 
     public static function conditionProvider(): array
     {
-        $data = array_merge(
+        return array_merge(
             parent::conditionProvider(),
             [
                 [
@@ -202,13 +202,6 @@ class QueryBuilderTest extends \yiiunit\framework\db\QueryBuilderTest
                 [['&&', 'id', new ArrayExpression([1])], '"id" && ARRAY[:qp0]', [':qp0' => 1]],
             ],
         );
-
-        // adjust dbms specific escaping
-        foreach ($data as $i => $condition) {
-            $data[$i][1] = DbHelper::replaceQuotes($condition[1], 'pgsql');
-        }
-
-        return $data;
     }
 
     public function testAlterColumn(): void

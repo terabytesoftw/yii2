@@ -151,7 +151,7 @@ class QueryBuilderTest extends \yiiunit\framework\db\QueryBuilderTest
 
     public static function conditionProvider(): array
     {
-        $data = array_merge(
+        return array_merge(
             parent::conditionProvider(),
             [
                 [
@@ -201,13 +201,6 @@ class QueryBuilderTest extends \yiiunit\framework\db\QueryBuilderTest
                 ],
             ],
         );
-
-        // adjust dbms specific escaping
-        foreach ($data as $i => $condition) {
-            $data[$i][1] = DbHelper::replaceQuotes($condition[1], 'oci');
-        }
-
-        return $data;
     }
 
     public function conditionProvidertmp()

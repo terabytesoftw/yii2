@@ -458,7 +458,9 @@ MySqlStatement;
     public function testAddDropDefaultValue($sql, Closure $builder): void
     {
         $this->expectException(NotSupportedException::class);
-        $this->expectExceptionMessage('mysql does not support dropping default value constraints.');
+        $this->expectExceptionMessageMatches(
+            '/^mysql does not support (adding|dropping) default value constraints\.$/',
+        );
 
         $builder($this->getQueryBuilder(false));
     }

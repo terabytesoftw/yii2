@@ -372,7 +372,9 @@ WHERE rownum <= 1) "EXCLUDED" ON ("T_upsert"."email"="EXCLUDED"."email") WHEN NO
     public function testAddDropDefaultValue($sql, Closure $builder): void
     {
         $this->expectException(NotSupportedException::class);
-        $this->expectExceptionMessage('oci does not support dropping default value constraints.');
+        $this->expectExceptionMessageMatches(
+            '/^oci does not support (adding|dropping) default value constraints\.$/',
+        );
 
         $builder($this->getQueryBuilder(false));
     }

@@ -486,7 +486,9 @@ class QueryBuilderTest extends \yiiunit\framework\db\QueryBuilderTest
     public function testAddDropDefaultValue($sql, Closure $builder): void
     {
         $this->expectException(NotSupportedException::class);
-        $this->expectExceptionMessage('pgsql does not support dropping default value constraints.');
+        $this->expectExceptionMessageMatches(
+            '/^pgsql does not support (adding|dropping) default value constraints\.$/',
+        );
 
         $builder($this->getQueryBuilder(false));
     }

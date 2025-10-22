@@ -116,7 +116,9 @@ class QueryBuilderTest extends \yiiunit\framework\db\QueryBuilderTest
     public function testAddDropCheck($sql, Closure $builder): void
     {
         $this->expectException(NotSupportedException::class);
-        $this->expectExceptionMessageMatches('/^.*::(addCheck|dropCheck) is not supported by CUBRID.*$/');
+        $this->expectExceptionMessageMatches(
+            '/^.*::(addCheck|dropCheck) is not supported by CUBRID.*$/',
+        );
 
         $builder($this->getQueryBuilder(false));
     }
@@ -128,7 +130,9 @@ class QueryBuilderTest extends \yiiunit\framework\db\QueryBuilderTest
     public function testAddDropDefaultValue($sql, Closure $builder): void
     {
         $this->expectException(NotSupportedException::class);
-        $this->expectExceptionMessage('cubrid does not support dropping default value constraints.');
+        $this->expectExceptionMessageMatches(
+            '/^cubrid does not support (adding|dropping) default value constraints\.$/',
+        );
 
         $builder($this->getQueryBuilder(false));
     }

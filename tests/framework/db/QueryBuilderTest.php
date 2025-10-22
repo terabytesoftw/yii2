@@ -1373,7 +1373,7 @@ abstract class QueryBuilderTest extends DatabaseTestCase
         $this->assertSame($this->getConnection(false)->quoteSql($sql), $builder($this->getQueryBuilder(false)));
     }
 
-    public function foreignKeysProvider()
+    public static function foreignKeysProvider(): array
     {
         $tableName = 'T_constraints_3';
         $name = 'CN_constraints_3';

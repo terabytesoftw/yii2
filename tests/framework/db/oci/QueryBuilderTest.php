@@ -48,7 +48,7 @@ class QueryBuilderTest extends \yiiunit\framework\db\QueryBuilderTest
         ]);
     }
 
-    public function foreignKeysProvider()
+    public static function foreignKeysProvider(): array
     {
         $tableName = 'T_constraints_3';
         $name = 'CN_constraints_3';

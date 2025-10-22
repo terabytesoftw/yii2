@@ -94,11 +94,6 @@ class QueryBuilderTest extends \yiiunit\framework\db\QueryBuilderTest
         );
     }
 
-    public function foreignKeysProvider(): void
-    {
-        $this->markTestSkipped('Adding/dropping foreign keys is not supported in SQLite.');
-    }
-
     public function indexesProvider()
     {
         $result = parent::indexesProvider();
@@ -295,4 +290,17 @@ class QueryBuilderTest extends \yiiunit\framework\db\QueryBuilderTest
 
         $builder($this->getQueryBuilder(false));
     }
+
+    /**
+     * @dataProvider foreignKeysProvider
+     * @param string $sql
+     */
+    public function testAddDropForeignKey($sql, Closure $builder): void
+    {
+        $this->expectException(NotSupportedException::class);
+        $this->expectExceptionMessageMatches('/^.*::(addForeignKey|dropForeignKey) is not supported by SQLite\.$/');
+
+        $builder($this->getQueryBuilder(false));
+    }
+
 }

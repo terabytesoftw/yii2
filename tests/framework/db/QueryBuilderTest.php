@@ -2493,6 +2493,19 @@ abstract class QueryBuilderTest extends DatabaseTestCase
      */
     public function testBuildLikeCondition($condition, $expected, $expectedParams): void
     {
+        if ($this->driverName === 'oci') {
+            /*
+            * Different pdo_oci8 versions may or may not implement PDO::quote(), so
+            * yii\db\Schema::quoteValue() may or may not quote \.
+            */
+            try {
+                $encodedBackslash = substr($this->getDb()->quoteValue('\\'), 1, -1);
+                $this->likeParameterReplacements[$encodedBackslash] = '\\';
+            } catch (Exception $e) {
+                $this->markTestSkipped('Could not execute Connection::quoteValue() method: ' . $e->getMessage());
+            }
+        }
+
         $expected = $this->replaceQuotes($expected);
 
         if (!empty($this->likeEscapeCharSql)) {

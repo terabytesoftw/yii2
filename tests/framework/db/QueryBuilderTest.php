@@ -1457,7 +1457,7 @@ abstract class QueryBuilderTest extends DatabaseTestCase
         $this->assertSame($this->getConnection(false)->quoteSql($sql), $builder($this->getQueryBuilder(false)));
     }
 
-    public function uniquesProvider()
+    public static function uniquesProvider(): array
     {
         $tableName1 = 'T_constraints_1';
         $name1 = 'CN_unique';

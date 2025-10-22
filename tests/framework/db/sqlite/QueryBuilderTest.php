@@ -123,7 +123,7 @@ class QueryBuilderTest extends \yiiunit\framework\db\QueryBuilderTest
         $this->markTestSkipped('Comments are not supported in SQLite');
     }
 
-    public function batchInsertProvider()
+    public static function batchInsertProvider(): array
     {
         $data = parent::batchInsertProvider();
         $data['escape-danger-chars']['expected'] = "INSERT INTO `customer` (`address`) VALUES ('SQL-danger chars are escaped: ''); --')";

@@ -2377,7 +2377,7 @@ abstract class QueryBuilderTest extends DatabaseTestCase
         $this->assertSame($expectedParams, $actualParams);
     }
 
-    public function deleteProvider()
+    public static function deleteProvider(): array
     {
         return [
             [
@@ -2386,7 +2386,7 @@ abstract class QueryBuilderTest extends DatabaseTestCase
                     'is_enabled' => false,
                     'power' => new Expression('WRONG_POWER()'),
                 ],
-                $this->replaceQuotes('DELETE FROM [[user]] WHERE ([[is_enabled]]=:qp0) AND ([[power]]=WRONG_POWER())'),
+                'DELETE FROM [[user]] WHERE ([[is_enabled]]=:qp0) AND ([[power]]=WRONG_POWER())',
                 [
                     ':qp0' => false,
                 ],
@@ -2405,7 +2405,7 @@ abstract class QueryBuilderTest extends DatabaseTestCase
     {
         $actualParams = [];
         $actualSQL = $this->getQueryBuilder()->delete($table, $condition, $actualParams);
-        $this->assertSame($expectedSQL, $actualSQL);
+        $this->assertSame($this->replaceQuotes($expectedSQL), $actualSQL);
         $this->assertSame($expectedParams, $actualParams);
     }
 

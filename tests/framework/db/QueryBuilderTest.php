@@ -1523,7 +1523,7 @@ abstract class QueryBuilderTest extends DatabaseTestCase
         $this->assertSame($this->getConnection(false)->quoteSql($sql), $builder($this->getQueryBuilder(false)));
     }
 
-    public function defaultValuesProvider()
+    public static function defaultValuesProvider(): array
     {
         $tableName = 'T_constraints_1';
         $name = 'CN_default';

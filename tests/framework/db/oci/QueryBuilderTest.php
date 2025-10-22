@@ -82,15 +82,6 @@ class QueryBuilderTest extends \yiiunit\framework\db\QueryBuilderTest
         return $result;
     }
 
-    /**
-     * @dataProvider defaultValuesProvider
-     * @param string $sql
-     */
-    public function testAddDropDefaultValue($sql, Closure $builder): void
-    {
-        $this->markTestSkipped('Adding/dropping default constraints is not supported in Oracle.');
-    }
-
     public function testCommentColumn(): void
     {
         $qb = $this->getQueryBuilder();
@@ -372,5 +363,17 @@ WHERE rownum <= 1) "EXCLUDED" ON ("T_upsert"."email"="EXCLUDED"."email") WHEN NO
         } else {
             $this->assertIsOneOf($actualParams, $expectedParams);
         }
+    }
+
+    /**
+     * @dataProvider defaultValuesProvider
+     * @param string $sql
+     */
+    public function testAddDropDefaultValue($sql, Closure $builder): void
+    {
+        $this->expectException(NotSupportedException::class);
+        $this->expectExceptionMessage('oci does not support dropping default value constraints.');
+
+        $builder($this->getQueryBuilder(false));
     }
 }

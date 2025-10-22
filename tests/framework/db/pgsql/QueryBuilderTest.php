@@ -8,7 +8,9 @@
 
 namespace yiiunit\framework\db\pgsql;
 
+use Closure;
 use yii\base\DynamicModel;
+use yii\base\NotSupportedException;
 use yii\db\ArrayExpression;
 use yii\db\Expression;
 use yii\db\JsonExpression;
@@ -259,11 +261,6 @@ class QueryBuilderTest extends \yiiunit\framework\db\QueryBuilderTest
         return $result;
     }
 
-    public function defaultValuesProvider(): void
-    {
-        $this->markTestSkipped('Adding/dropping default constraints is not supported in PostgreSQL.');
-    }
-
     public function testCommentColumn(): void
     {
         $qb = $this->getQueryBuilder();
@@ -480,5 +477,17 @@ class QueryBuilderTest extends \yiiunit\framework\db\QueryBuilderTest
         $expected = 'DROP INDEX {{%schema.index}}';
         $sql = $qb->dropIndex('index', '{{%schema.table}}');
         $this->assertEquals($expected, $sql);
+    }
+
+    /**
+     * @dataProvider defaultValuesProvider
+     * @param string $sql
+     */
+    public function testAddDropDefaultValue($sql, Closure $builder): void
+    {
+        $this->expectException(NotSupportedException::class);
+        $this->expectExceptionMessage('pgsql does not support dropping default value constraints.');
+
+        $builder($this->getQueryBuilder(false));
     }
 }

@@ -37,11 +37,6 @@ class QueryBuilderTest extends \yiiunit\framework\db\QueryBuilderTest
         return array_merge(parent::columnTypes(), []);
     }
 
-    public function defaultValuesProvider(): void
-    {
-        $this->markTestSkipped('Adding/dropping default constraints is not supported in CUBRID.');
-    }
-
     public function testResetSequence(): void
     {
         $qb = $this->getQueryBuilder();
@@ -122,6 +117,18 @@ class QueryBuilderTest extends \yiiunit\framework\db\QueryBuilderTest
     {
         $this->expectException(NotSupportedException::class);
         $this->expectExceptionMessageMatches('/^.*::(addCheck|dropCheck) is not supported by CUBRID.*$/');
+
+        $builder($this->getQueryBuilder(false));
+    }
+
+    /**
+     * @dataProvider defaultValuesProvider
+     * @param string $sql
+     */
+    public function testAddDropDefaultValue($sql, Closure $builder): void
+    {
+        $this->expectException(NotSupportedException::class);
+        $this->expectExceptionMessage('cubrid does not support dropping default value constraints.');
 
         $builder($this->getQueryBuilder(false));
     }

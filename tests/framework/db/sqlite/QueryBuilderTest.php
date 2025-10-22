@@ -113,11 +113,6 @@ class QueryBuilderTest extends \yiiunit\framework\db\QueryBuilderTest
         return $result;
     }
 
-    public function defaultValuesProvider(): void
-    {
-        $this->markTestSkipped('Adding/dropping default constraints is not supported in SQLite.');
-    }
-
     public function testCommentColumn(): void
     {
         $this->markTestSkipped('Comments are not supported in SQLite');
@@ -313,6 +308,18 @@ class QueryBuilderTest extends \yiiunit\framework\db\QueryBuilderTest
     {
         $this->expectException(NotSupportedException::class);
         $this->expectExceptionMessageMatches('/^.*::(addCheck|dropCheck) is not supported by SQLite\.$/');
+
+        $builder($this->getQueryBuilder(false));
+    }
+
+    /**
+     * @dataProvider defaultValuesProvider
+     * @param string $sql
+     */
+    public function testAddDropDefaultValue($sql, Closure $builder): void
+    {
+        $this->expectException(NotSupportedException::class);
+        $this->expectExceptionMessage('sqlite does not support dropping default value constraints.');
 
         $builder($this->getQueryBuilder(false));
     }

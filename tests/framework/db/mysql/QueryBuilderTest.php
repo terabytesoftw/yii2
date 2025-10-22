@@ -8,8 +8,10 @@
 
 namespace yiiunit\framework\db\mysql;
 
+use Closure;
 use PDO;
 use yii\base\DynamicModel;
+use yii\base\NotSupportedException;
 use yii\db\Expression;
 use yii\db\JsonExpression;
 use yii\db\Query;
@@ -196,11 +198,6 @@ class QueryBuilderTest extends \yiiunit\framework\db\QueryBuilderTest
         $result = parent::uniquesProvider();
         $result['drop'][0] = 'DROP INDEX [[CN_unique]] ON {{T_constraints_1}}';
         return $result;
-    }
-
-    public function defaultValuesProvider(): void
-    {
-        $this->markTestSkipped('Adding/dropping default constraints is not supported in MySQL.');
     }
 
     public function testResetSequence(): void
@@ -452,5 +449,17 @@ MySqlStatement;
         // non-primary key columns should have DEFAULT as value
         $sql = $command->insert('negative_default_values', [])->getRawSql();
         $this->assertEquals('INSERT INTO `negative_default_values` (`tinyint_col`) VALUES (DEFAULT)', $sql);
+    }
+
+    /**
+     * @dataProvider defaultValuesProvider
+     * @param string $sql
+     */
+    public function testAddDropDefaultValue($sql, Closure $builder): void
+    {
+        $this->expectException(NotSupportedException::class);
+        $this->expectExceptionMessage('mysql does not support dropping default value constraints.');
+
+        $builder($this->getQueryBuilder(false));
     }
 }

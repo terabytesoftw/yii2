@@ -123,22 +123,6 @@ class QueryBuilderTest extends \yiiunit\framework\db\QueryBuilderTest
         $this->assertEquals(4, $result);
     }
 
-    public function likeConditionProvider()
-    {
-        /*
-         * Different pdo_oci8 versions may or may not implement PDO::quote(), so
-         * yii\db\Schema::quoteValue() may or may not quote \.
-         */
-        try {
-            $encodedBackslash = substr($this->getDb()->quoteValue('\\'), 1, -1);
-            $this->likeParameterReplacements[$encodedBackslash] = '\\';
-        } catch (Exception $e) {
-            $this->markTestSkipped('Could not execute Connection::quoteValue() method: ' . $e->getMessage());
-        }
-
-        return parent::likeConditionProvider();
-    }
-
     public static function conditionProvider(): array
     {
         return array_merge(
@@ -377,5 +361,27 @@ WHERE rownum <= 1) "EXCLUDED" ON ("T_upsert"."email"="EXCLUDED"."email") WHEN NO
         );
 
         $builder($this->getQueryBuilder(false));
+    }
+
+    /**
+     * @dataProvider likeConditionProvider
+     * @param array $condition
+     * @param string $expected
+     * @param array $expectedParams
+     */
+    public function testBuildLikeCondition($condition, $expected, $expectedParams): void
+    {
+        /*
+         * Different pdo_oci8 versions may or may not implement PDO::quote(), so
+         * yii\db\Schema::quoteValue() may or may not quote \.
+         */
+        try {
+            $encodedBackslash = substr($this->getDb()->quoteValue('\\'), 1, -1);
+            $this->likeParameterReplacements[$encodedBackslash] = '\\';
+        } catch (Exception $e) {
+            $this->markTestSkipped('Could not execute Connection::quoteValue() method: ' . $e->getMessage());
+        }
+
+        parent::testBuildLikeCondition($condition, $expected, $expectedParams);
     }
 }

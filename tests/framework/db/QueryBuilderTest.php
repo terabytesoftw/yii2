@@ -2439,9 +2439,9 @@ abstract class QueryBuilderTest extends DatabaseTestCase
         $this->assertEquals($this->replaceQuotes($expected), $sql);
     }
 
-    public function likeConditionProvider()
+    public static function likeConditionProvider(): array
     {
-        $conditions = [
+        return [
             // simple like
             [['like', 'name', 'foo%'], '[[name]] LIKE :qp0', [':qp0' => '%foo\%%']],
             [['not like', 'name', 'foo%'], '[[name]] NOT LIKE :qp0', [':qp0' => '%foo\%%']],
@@ -2483,22 +2483,6 @@ abstract class QueryBuilderTest extends DatabaseTestCase
             // like with expression as columnName
             [['like', new Expression('name'), 'teststring'], 'name LIKE :qp0', [':qp0' => '%teststring%']],
         ];
-
-        // adjust dbms specific escaping
-        foreach ($conditions as $i => $condition) {
-            $conditions[$i][1] = $this->replaceQuotes($condition[1]);
-            if (!empty($this->likeEscapeCharSql)) {
-                preg_match_all('/(?P<condition>LIKE.+?)( AND| OR|$)/', $conditions[$i][1], $matches, PREG_SET_ORDER);
-                foreach ($matches as $match) {
-                    $conditions[$i][1] = str_replace($match['condition'], $match['condition'] . $this->likeEscapeCharSql, $conditions[$i][1]);
-                }
-            }
-            foreach ($conditions[$i][2] as $name => $value) {
-                $conditions[$i][2][$name] = strtr($conditions[$i][2][$name], $this->likeParameterReplacements);
-            }
-        }
-
-        return $conditions;
     }
 
     /**
@@ -2509,8 +2493,28 @@ abstract class QueryBuilderTest extends DatabaseTestCase
      */
     public function testBuildLikeCondition($condition, $expected, $expectedParams): void
     {
+        $expected = $this->replaceQuotes($expected);
+
+        if (!empty($this->likeEscapeCharSql)) {
+            preg_match_all(
+                '/(?P<condition>LIKE.+?)( AND| OR|$)/',
+                $expected,
+                $matches,
+                PREG_SET_ORDER,
+            );
+
+            foreach ($matches as $match) {
+                $expected = str_replace($match['condition'], $match['condition'] . $this->likeEscapeCharSql, $expected);
+            }
+        }
+
+        foreach ($expectedParams as $name => $value) {
+            $expectedParams[$name] = strtr($expectedParams[$name], $this->likeParameterReplacements);
+        }
+
         $query = (new Query())->where($condition);
         list($sql, $params) = $this->getQueryBuilder()->build($query);
+
         $this->assertEquals('SELECT *' . (empty($expected) ? '' : ' WHERE ' . $this->replaceQuotes($expected)), $sql);
         $this->assertEquals($expectedParams, $params);
     }

@@ -1552,11 +1552,17 @@ abstract class QueryBuilderTest extends DatabaseTestCase
         $this->assertSame($this->getConnection(false)->quoteSql($sql), $builder($this->getQueryBuilder(false)));
     }
 
-    public function existsParamsProvider()
+    public static function existsParamsProvider(): array
     {
         return [
-            ['exists', $this->replaceQuotes('SELECT [[id]] FROM [[TotalExample]] [[t]] WHERE EXISTS (SELECT [[1]] FROM [[Website]] [[w]])')],
-            ['not exists', $this->replaceQuotes('SELECT [[id]] FROM [[TotalExample]] [[t]] WHERE NOT EXISTS (SELECT [[1]] FROM [[Website]] [[w]])')],
+            [
+                'exists',
+                'SELECT [[id]] FROM [[TotalExample]] [[t]] WHERE EXISTS (SELECT [[1]] FROM [[Website]] [[w]])',
+            ],
+            [
+                'not exists',
+                'SELECT [[id]] FROM [[TotalExample]] [[t]] WHERE NOT EXISTS (SELECT [[1]] FROM [[Website]] [[w]])',
+            ],
         ];
     }
 
@@ -1570,16 +1576,14 @@ abstract class QueryBuilderTest extends DatabaseTestCase
         $expectedQueryParams = [];
 
         $subQuery = new Query();
-        $subQuery->select('1')
-            ->from('Website w');
+        $subQuery->select('1')->from('Website w');
 
         $query = new Query();
-        $query->select('id')
-            ->from('TotalExample t')
-            ->where([$cond, $subQuery]);
+        $query->select('id')->from('TotalExample t')->where([$cond, $subQuery]);
 
         list($actualQuerySql, $actualQueryParams) = $this->getQueryBuilder()->build($query);
-        $this->assertEquals($expectedQuerySql, $actualQuerySql);
+        
+        $this->assertEquals($this->replaceQuotes($expectedQuerySql), $actualQuerySql);
         $this->assertEquals($expectedQueryParams, $actualQueryParams);
     }
 

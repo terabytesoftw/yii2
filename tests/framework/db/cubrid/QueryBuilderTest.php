@@ -8,7 +8,9 @@
 
 namespace yiiunit\framework\db\cubrid;
 
+use Closure;
 use PDO;
+use yii\base\NotSupportedException;
 
 /**
  * @group db
@@ -33,11 +35,6 @@ class QueryBuilderTest extends \yiiunit\framework\db\QueryBuilderTest
     public function columnTypes()
     {
         return array_merge(parent::columnTypes(), []);
-    }
-
-    public function checksProvider(): void
-    {
-        $this->markTestSkipped('Adding/dropping check constraints is not supported in CUBRID.');
     }
 
     public function defaultValuesProvider(): void
@@ -115,5 +112,17 @@ class QueryBuilderTest extends \yiiunit\framework\db\QueryBuilderTest
         unset($newData['no columns to update']);
 
         return $newData;
+    }
+
+    /**
+     * @dataProvider checksProvider
+     * @param string $sql
+     */
+    public function testAddDropCheck($sql, Closure $builder): void
+    {
+        $this->expectException(NotSupportedException::class);
+        $this->expectExceptionMessageMatches('/^.*::(addCheck|dropCheck) is not supported by CUBRID.*$/');
+
+        $builder($this->getQueryBuilder(false));
     }
 }

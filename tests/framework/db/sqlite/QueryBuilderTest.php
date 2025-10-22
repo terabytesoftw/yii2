@@ -113,11 +113,6 @@ class QueryBuilderTest extends \yiiunit\framework\db\QueryBuilderTest
         return $result;
     }
 
-    public function checksProvider(): void
-    {
-        $this->markTestSkipped('Adding/dropping check constraints is not supported in SQLite.');
-    }
-
     public function defaultValuesProvider(): void
     {
         $this->markTestSkipped('Adding/dropping default constraints is not supported in SQLite.');
@@ -306,6 +301,18 @@ class QueryBuilderTest extends \yiiunit\framework\db\QueryBuilderTest
     {
         $this->expectException(NotSupportedException::class);
         $this->expectExceptionMessageMatches('/^.*::(addUnique|dropUnique) is not supported by SQLite\.$/');
+
+        $builder($this->getQueryBuilder(false));
+    }
+
+    /**
+     * @dataProvider checksProvider
+     * @param string $sql
+     */
+    public function testAddDropCheck($sql, Closure $builder): void
+    {
+        $this->expectException(NotSupportedException::class);
+        $this->expectExceptionMessageMatches('/^.*::(addCheck|dropCheck) is not supported by SQLite\.$/');
 
         $builder($this->getQueryBuilder(false));
     }

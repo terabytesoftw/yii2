@@ -1494,7 +1494,7 @@ abstract class QueryBuilderTest extends DatabaseTestCase
         $this->assertSame($this->getConnection(false)->quoteSql($sql), $builder($this->getQueryBuilder(false)));
     }
 
-    public function checksProvider()
+    public static function checksProvider(): array
     {
         $tableName = 'T_constraints_1';
         $name = 'CN_check';

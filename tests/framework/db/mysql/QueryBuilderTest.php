@@ -181,7 +181,7 @@ class QueryBuilderTest extends \yiiunit\framework\db\QueryBuilderTest
         return $result;
     }
 
-    public function indexesProvider()
+    public static function indexesProvider(): array
     {
         $result = parent::indexesProvider();
         $result['create'][0] = 'ALTER TABLE {{T_constraints_2}} ADD INDEX [[CN_constraints_2_single]] ([[C_index_1]])';

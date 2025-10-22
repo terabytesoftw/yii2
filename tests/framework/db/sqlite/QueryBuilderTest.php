@@ -94,7 +94,7 @@ class QueryBuilderTest extends \yiiunit\framework\db\QueryBuilderTest
         );
     }
 
-    public function indexesProvider()
+    public static function indexesProvider(): array
     {
         $result = parent::indexesProvider();
         $result['drop'][0] = 'DROP INDEX [[CN_constraints_2_single]]';
@@ -302,5 +302,4 @@ class QueryBuilderTest extends \yiiunit\framework\db\QueryBuilderTest
 
         $builder($this->getQueryBuilder(false));
     }
-
 }

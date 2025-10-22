@@ -1409,7 +1409,7 @@ abstract class QueryBuilderTest extends DatabaseTestCase
         $this->assertSame($this->getConnection(false)->quoteSql($sql), $builder($this->getQueryBuilder(false)));
     }
 
-    public function indexesProvider()
+    public static function indexesProvider(): array
     {
         $tableName = 'T_constraints_2';
         $name1 = 'CN_constraints_2_single';

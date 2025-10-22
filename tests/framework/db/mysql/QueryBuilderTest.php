@@ -363,7 +363,7 @@ class QueryBuilderTest extends \yiiunit\framework\db\QueryBuilderTest
         );
     }
 
-    public function updateProvider()
+    public static function updateProvider(): array
     {
         $items = parent::updateProvider();
 
@@ -375,7 +375,7 @@ class QueryBuilderTest extends \yiiunit\framework\db\QueryBuilderTest
             [
                 'id' => 1,
             ],
-            $this->replaceQuotes('UPDATE [[profile]] SET [[description]]=:qp0 WHERE [[id]]=:qp1'),
+            'UPDATE [[profile]] SET [[description]]=:qp0 WHERE [[id]]=:qp1',
             [
                 ':qp0' => '{"abc":"def","0":123,"1":null}',
                 ':qp1' => 1,

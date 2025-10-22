@@ -2340,7 +2340,7 @@ abstract class QueryBuilderTest extends DatabaseTestCase
         $this->assertEquals($expected, $sql);
     }
 
-    public function updateProvider()
+    public static function updateProvider(): array
     {
         return [
             [
@@ -2352,7 +2352,7 @@ abstract class QueryBuilderTest extends DatabaseTestCase
                 [
                     'id' => 100,
                 ],
-                $this->replaceQuotes('UPDATE [[customer]] SET [[status]]=:qp0, [[updated_at]]=now() WHERE [[id]]=:qp1'),
+                'UPDATE [[customer]] SET [[status]]=:qp0, [[updated_at]]=now() WHERE [[id]]=:qp1',
                 [
                     ':qp0' => 1,
                     ':qp1' => 100,
@@ -2373,7 +2373,7 @@ abstract class QueryBuilderTest extends DatabaseTestCase
     {
         $actualParams = [];
         $actualSQL = $this->getQueryBuilder()->update($table, $columns, $condition, $actualParams);
-        $this->assertSame($expectedSQL, $actualSQL);
+        $this->assertSame($this->replaceQuotes($expectedSQL), $actualSQL);
         $this->assertSame($expectedParams, $actualParams);
     }
 

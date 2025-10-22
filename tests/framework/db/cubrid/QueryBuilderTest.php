@@ -61,7 +61,7 @@ class QueryBuilderTest extends \yiiunit\framework\db\QueryBuilderTest
         parent::testCommentColumn();
     }
 
-    public function upsertProvider()
+    public static function upsertProvider(): array
     {
         $concreteData = [
             'regular values' => [

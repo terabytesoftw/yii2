@@ -2040,7 +2040,7 @@ abstract class QueryBuilderTest extends DatabaseTestCase
         $this->assertInstanceOf('yii\db\QueryBuilder', $this->getQueryBuilder(true, true));
     }
 
-    public function upsertProvider()
+    public static function upsertProvider(): array
     {
         return [
             'regular values' => [

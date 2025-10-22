@@ -351,4 +351,26 @@ WHERE rownum <= 1) "EXCLUDED" ON ("T_upsert"."email"="EXCLUDED"."email") WHEN NO
 
         parent::testAddDropDefaultValue($sql, $builder);
     }
+
+    /**
+     * @dataProvider likeConditionProvider
+     * @param array $condition
+     * @param string $expected
+     * @param array $expectedParams
+     */
+    public function testBuildLikeCondition($condition, $expected, $expectedParams): void
+    {
+        /**
+         * Different pdo_oci8 versions may or may not implement PDO::quote(), so
+         * yii\db\Schema::quoteValue() may or may not quote \.
+         */
+        try {
+            $encodedBackslash = substr($this->getDb()->quoteValue('\\\\'), 1, -1);
+            $this->likeParameterReplacements[$encodedBackslash] = '\\';
+        } catch (Exception $e) {
+            $this->markTestSkipped('Could not execute Connection::quoteValue() method: ' . $e->getMessage());
+        }
+
+        parent::testBuildLikeCondition($condition, $expected, $expectedParams);
+    }
 }

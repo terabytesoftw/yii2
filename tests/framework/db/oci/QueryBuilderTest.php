@@ -366,12 +366,10 @@ WHERE rownum <= 1) "EXCLUDED" ON ("T_upsert"."email"="EXCLUDED"."email") WHEN NO
          */
         try {
             $encodedBackslash = substr($this->getDb()->quoteValue('\\'), 1, -1);
-
-            $this->likeParameterReplacements[$encodedBackslash] = '\\';
-
-            foreach ($expectedParams as $name => $value) {
-                $expectedParams[$name] = strtr($value, $this->likeParameterReplacements);
-            }
+            $this->likeParameterReplacements = array_merge(
+                [$encodedBackslash => '\\'],
+                $this->likeParameterReplacements,
+            );
         } catch (Exception $e) {
             $this->markTestSkipped('Could not execute Connection::quoteValue() method: ' . $e->getMessage());
         }

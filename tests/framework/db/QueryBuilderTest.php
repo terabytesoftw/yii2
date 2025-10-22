@@ -2499,7 +2499,7 @@ abstract class QueryBuilderTest extends DatabaseTestCase
             * yii\db\Schema::quoteValue() may or may not quote \.
             */
             try {
-                $encodedBackslash = substr($this->getDb()->quoteValue('\\'), 1, -1);
+                $encodedBackslash = substr($this->getDb()->quoteValue('\\\\'), 1, -1);
                 $this->likeParameterReplacements[$encodedBackslash] = '\\';
             } catch (Exception $e) {
                 $this->markTestSkipped('Could not execute Connection::quoteValue() method: ' . $e->getMessage());

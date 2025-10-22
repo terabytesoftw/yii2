@@ -335,18 +335,7 @@ WHERE rownum <= 1) "EXCLUDED" ON ("T_upsert"."email"="EXCLUDED"."email") WHEN NO
      */
     public function testUpsert($table, $insertColumns, $updateColumns, $expectedSQL, $expectedParams): void
     {
-        $actualParams = [];
-        $actualSQL = $this->getQueryBuilder(true, $this->driverName === 'sqlite')->upsert($table, $insertColumns, $updateColumns, $actualParams);
-        if (is_string($expectedSQL)) {
-            $this->assertEqualsWithoutLE($expectedSQL, $actualSQL);
-        } else {
-            $this->assertStringContainsString($actualSQL, $expectedSQL);
-        }
-        if (ArrayHelper::isAssociative($expectedParams)) {
-            $this->assertSame($expectedParams, $actualParams);
-        } else {
-            $this->assertIsOneOf($actualParams, $expectedParams);
-        }
+        parent::testUpsert($table, $insertColumns, $updateColumns, $expectedSQL, $expectedParams);
     }
 
     /**
@@ -360,7 +349,7 @@ WHERE rownum <= 1) "EXCLUDED" ON ("T_upsert"."email"="EXCLUDED"."email") WHEN NO
             '/^oci does not support (adding|dropping) default value constraints\.$/',
         );
 
-        $builder($this->getQueryBuilder(false));
+        parent::testAddDropDefaultValue($sql, $builder);
     }
 
     /**

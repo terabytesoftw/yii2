@@ -490,6 +490,6 @@ class QueryBuilderTest extends \yiiunit\framework\db\QueryBuilderTest
             '/^pgsql does not support (adding|dropping) default value constraints\.$/',
         );
 
-        $builder($this->getQueryBuilder(false));
+        parent::testAddDropDefaultValue($sql, $builder);
     }
 }

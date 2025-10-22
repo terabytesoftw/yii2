@@ -462,6 +462,6 @@ MySqlStatement;
             '/^mysql does not support (adding|dropping) default value constraints\.$/',
         );
 
-        $builder($this->getQueryBuilder(false));
+        parent::testAddDropDefaultValue($sql, $builder);
     }
 }

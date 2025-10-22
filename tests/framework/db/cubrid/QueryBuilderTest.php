@@ -120,7 +120,7 @@ class QueryBuilderTest extends \yiiunit\framework\db\QueryBuilderTest
             '/^.*::(addCheck|dropCheck) is not supported by CUBRID.*$/',
         );
 
-        $builder($this->getQueryBuilder(false));
+        parent::testAddDropCheck($sql, $builder);
     }
 
     /**
@@ -134,6 +134,6 @@ class QueryBuilderTest extends \yiiunit\framework\db\QueryBuilderTest
             '/^cubrid does not support (adding|dropping) default value constraints\.$/',
         );
 
-        $builder($this->getQueryBuilder(false));
+        parent::testAddDropDefaultValue($sql, $builder);
     }
 }

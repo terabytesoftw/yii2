@@ -275,7 +275,7 @@ class QueryBuilderTest extends \yiiunit\framework\db\QueryBuilderTest
             '/^.*::(addPrimaryKey|dropPrimaryKey) is not supported by SQLite\.$/',
         );
 
-        $builder($this->getQueryBuilder(false));
+        parent::testAddDropPrimaryKey($sql, $builder);
     }
 
     /**
@@ -289,7 +289,7 @@ class QueryBuilderTest extends \yiiunit\framework\db\QueryBuilderTest
             '/^.*::(addForeignKey|dropForeignKey) is not supported by SQLite\.$/',
         );
 
-        $builder($this->getQueryBuilder(false));
+        parent::testAddDropForeignKey($sql, $builder);
     }
 
     /**
@@ -303,7 +303,7 @@ class QueryBuilderTest extends \yiiunit\framework\db\QueryBuilderTest
             '/^.*::(addUnique|dropUnique) is not supported by SQLite\.$/',
         );
 
-        $builder($this->getQueryBuilder(false));
+        parent::testAddDropUnique($sql, $builder);
     }
 
     /**
@@ -317,7 +317,7 @@ class QueryBuilderTest extends \yiiunit\framework\db\QueryBuilderTest
             '/^.*::(addCheck|dropCheck) is not supported by SQLite\.$/',
         );
 
-        $builder($this->getQueryBuilder(false));
+        parent::testAddDropCheck($sql, $builder);
     }
 
     /**
@@ -331,6 +331,6 @@ class QueryBuilderTest extends \yiiunit\framework\db\QueryBuilderTest
             '/^.*::(addDefaultValue|dropDefaultValue) is not supported by SQLite\.$/',
         );
 
-        $builder($this->getQueryBuilder(false));
+        parent::testAddDropDefaultValue($sql, $builder);
     }
 }

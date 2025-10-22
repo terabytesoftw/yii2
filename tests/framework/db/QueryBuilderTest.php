@@ -2299,7 +2299,7 @@ abstract class QueryBuilderTest extends DatabaseTestCase
                 'type',
                 ['bool_col', 'bool_col2'],
                 [[false, null]],
-                'expected' => "INSERT INTO [[type]] ([[bool_col]], [[bool_col2]]) VALUES (0, NULL)",
+                'expected' => 'INSERT INTO [[type]] ([[bool_col]], [[bool_col2]]) VALUES (0, NULL)',
             ],
             [
                 '{{%type}}',

@@ -1097,10 +1097,6 @@ SQL;
             [
                 'test_pk_constraint_3',
                 'test_pk',
-                [
-                    'int1' => 'integer not null',
-                    'int2' => 'integer not null',
-                ],
                 ['int1', 'int2'],
             ],
             [

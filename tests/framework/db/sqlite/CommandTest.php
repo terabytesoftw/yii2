@@ -132,7 +132,7 @@ class CommandTest extends \yiiunit\framework\db\CommandTest
             [
                 'val1' => 'foo',
                 'val2' => 'bar',
-            ]
+            ],
         )->execute();
 
         $this->assertSame(
@@ -169,7 +169,8 @@ class CommandTest extends \yiiunit\framework\db\CommandTest
                     'val1' => 'foo',
                     'val2' => 'bar',
                 ],
-            )->queryAll());
+            )->queryAll(),
+        );
     }
 
     public static function batchInsertSqlProvider(): array

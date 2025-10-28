@@ -1149,9 +1149,8 @@ SQL;
         $this->assertNull($schema->getTablePrimaryKey($tableName, true));
 
         $db->createCommand()->addPrimaryKey($name, $tableName, $pk)->execute();
-        $pk = is_string($pk) ? [$pk] : $pk;
 
-        $this->assertSame($pk, $schema->getTablePrimaryKey($tableName, true)->columnNames);
+        $this->assertSame((array) $pk, $schema->getTablePrimaryKey($tableName, true)->columnNames);
 
         $db->createCommand()->dropPrimaryKey($name, $tableName)->execute();
 

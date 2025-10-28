@@ -741,10 +741,6 @@ SQL;
 
     public function testAlterTable(): void
     {
-        if ($this->driverName === 'sqlite') {
-            $this->markTestSkipped('Sqlite does not support alterTable');
-        }
-
         $db = $this->getConnection();
 
         if ($db->getSchema()->getTableSchema('testAlterTable') !== null) {
@@ -1340,7 +1336,7 @@ SQL;
     {
         $db = $this->getConnection(false);
 
-        if (version_compare($db->getServerVersion(), '8.0.16', '<')) {
+        if ($db->getDriverName() === 'mysql' && version_compare($db->getServerVersion(), '8.0.16', '<')) {
             $this->markTestSkipped('MySQL < 8.0.16 does not support CHECK constraints.');
         }
 

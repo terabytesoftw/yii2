@@ -224,7 +224,7 @@ class CommandTest extends \yiiunit\framework\db\CommandTest
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Table not found: no_exist_table');
 
-        $db = $this->getConnection();
+        $db = $this->getConnection(false);
         $db->createCommand()->resetSequence('no_exist_table', 5)->execute();
     }
 
@@ -233,7 +233,53 @@ class CommandTest extends \yiiunit\framework\db\CommandTest
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage("There is not sequence associated with table 'type'.");
 
-        $db = $this->getConnection();
+        $db = $this->getConnection(false);
         $db->createCommand()->resetSequence('type', 5)->execute();
+    }
+
+    public function testAlterTable(): void
+    {
+        $this->expectException(NotSupportedException::class);
+        $this->expectExceptionMessage(
+            'yii\db\sqlite\QueryBuilder::alterColumn is not supported by SQLite.',
+        );
+
+        $db = $this->getConnection(false);
+        $db->createCommand()->alterColumn('table1', 'column1', 'INTEGER')->execute();
+    }
+
+    public function testAddDropDefaultValue(): void
+    {
+        $db = $this->getConnection(false);
+
+        try {
+            $db->createCommand()->addDefaultValue(
+                'test_def_constraint',
+                'test_def',
+                'int1',
+                41,
+            )->execute();
+
+            $this->fail("Expected 'NotSupportedException' for 'addDefaultValue' not thrown.");
+        } catch (NotSupportedException $e) {
+            $this->assertStringContainsString(
+                'yii\db\sqlite\QueryBuilder::addDefaultValue is not supported by SQLite.',
+                $e->getMessage(),
+            );
+        }
+
+        try {
+            $db->createCommand()->dropDefaultValue(
+                'test_def_constraint',
+                'test_def',
+            )->execute();
+
+            $this->fail("Expected 'NotSupportedException' for 'dropDefaultValue' not thrown.");
+        } catch (NotSupportedException $e) {
+            $this->assertStringContainsString(
+                'yii\db\sqlite\QueryBuilder::dropDefaultValue is not supported by SQLite.',
+                $e->getMessage(),
+            );
+        }
     }
 }

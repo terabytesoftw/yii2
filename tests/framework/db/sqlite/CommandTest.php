@@ -45,7 +45,7 @@ class CommandTest extends \yiiunit\framework\db\CommandTest
 
     /**
      * @dataProvider addPrimaryKeyProvider
-     * 
+     *
      * @param string $name
      * @param string $tableName
      * @param array $column

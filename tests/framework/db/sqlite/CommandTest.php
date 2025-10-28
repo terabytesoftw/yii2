@@ -49,12 +49,12 @@ class CommandTest extends \yiiunit\framework\db\CommandTest
      * @param string $name
      * @param string $tableName
      * @param array $column
-     * @param array $pk
+     * @param array|string $pk
      *
      * @phpstan-param list<string> $column
      * @phpstan-param list<string> $pk
      */
-    public function testAddDropPrimaryKey(string $name, string $tableName, array $columns, array $pk): void
+    public function testAddDropPrimaryKey(string $name, string $tableName, array $columns, $pk): void
     {
         $this->expectException(NotSupportedException::class);
         $this->expectExceptionMessageMatches(

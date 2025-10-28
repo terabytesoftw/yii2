@@ -104,7 +104,12 @@ class CommandTest extends \yiiunit\framework\db\CommandTest
 
     public function testAddDropCheck(): void
     {
-        $this->markTestSkipped('SQLite does not support adding/dropping check constraints.');
+        $this->expectException(NotSupportedException::class);
+        $this->expectExceptionMessageMatches(
+            '/^.*::(addCheck|dropCheck) is not supported by SQLite\.$/',
+        );
+
+        parent::testAddDropCheck();
     }
 
     public function testMultiStatementSupport(): void

@@ -8,6 +8,7 @@
 
 namespace yiiunit\framework\db\sqlite;
 
+use yii\base\InvalidArgumentException;
 use yii\base\NotSupportedException;
 use yii\db\sqlite\Schema;
 
@@ -115,44 +116,60 @@ class CommandTest extends \yiiunit\framework\db\CommandTest
     public function testMultiStatementSupport(): void
     {
         $db = $this->getConnection(false);
-        $sql = <<<'SQL'
-DROP TABLE IF EXISTS {{T_multistatement}};
-CREATE TABLE {{T_multistatement}} (
-    [[intcol]] INTEGER,
-    [[textcol]] TEXT
-);
-INSERT INTO {{T_multistatement}} VALUES(41, :val1);
-INSERT INTO {{T_multistatement}} VALUES(42, :val2);
-SQL;
-        $db->createCommand($sql, [
-            'val1' => 'foo',
-            'val2' => 'bar',
-        ])->execute();
-        $this->assertSame([
+
+        $sql = <<<SQL
+        DROP TABLE IF EXISTS {{T_multistatement}};
+        CREATE TABLE {{T_multistatement}} (
+            [[intcol]] INTEGER,
+            [[textcol]] TEXT
+        );
+        INSERT INTO {{T_multistatement}} VALUES(41, :val1);
+        INSERT INTO {{T_multistatement}} VALUES(42, :val2);
+        SQL;
+
+        $db->createCommand(
+            $sql,
             [
-                'intcol' => '41',
-                'textcol' => 'foo',
-            ],
+                'val1' => 'foo',
+                'val2' => 'bar',
+            ]
+        )->execute();
+
+        $this->assertSame(
             [
-                'intcol' => '42',
-                'textcol' => 'bar',
+                [
+                    'intcol' => '41',
+                    'textcol' => 'foo',
+                ],
+                [
+                    'intcol' => '42',
+                    'textcol' => 'bar',
+                ],
             ],
-        ], $db->createCommand('SELECT * FROM {{T_multistatement}}')->queryAll());
-        $sql = <<<'SQL'
-UPDATE {{T_multistatement}} SET [[intcol]] = :newInt WHERE [[textcol]] = :val1;
-DELETE FROM {{T_multistatement}} WHERE [[textcol]] = :val2;
-SELECT * FROM {{T_multistatement}}
-SQL;
-        $this->assertSame([
+            $db->createCommand('SELECT * FROM {{T_multistatement}}')->queryAll(),
+        );
+
+        $sql = <<<SQL
+        UPDATE {{T_multistatement}} SET [[intcol]] = :newInt WHERE [[textcol]] = :val1;
+        DELETE FROM {{T_multistatement}} WHERE [[textcol]] = :val2;
+        SELECT * FROM {{T_multistatement}}
+        SQL;
+
+        $this->assertSame(
             [
-                'intcol' => '410',
-                'textcol' => 'foo',
+                [
+                    'intcol' => '410',
+                    'textcol' => 'foo',
+                ],
             ],
-        ], $db->createCommand($sql, [
-            'newInt' => 410,
-            'val1' => 'foo',
-            'val2' => 'bar',
-        ])->queryAll());
+            $db->createCommand(
+                $sql,
+                [
+                    'newInt' => 410,
+                    'val1' => 'foo',
+                    'val2' => 'bar',
+                ],
+            )->queryAll());
     }
 
     public static function batchInsertSqlProvider(): array
@@ -203,7 +220,7 @@ SQL;
 
     public function testResetSequenceExceptionTableNoExist(): void
     {
-        $this->expectException('yii\base\InvalidArgumentException');
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Table not found: no_exist_table');
 
         $db = $this->getConnection();
@@ -212,7 +229,7 @@ SQL;
 
     public function testResetSequenceExceptionSquenceNoExist(): void
     {
-        $this->expectException('yii\base\InvalidArgumentException');
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage("There is not sequence associated with table 'type'.");
 
         $db = $this->getConnection();

@@ -8,6 +8,7 @@
 
 namespace yiiunit\framework\db\sqlite;
 
+use yii\base\NotSupportedException;
 use yii\db\sqlite\Schema;
 
 /**
@@ -42,9 +43,25 @@ class CommandTest extends \yiiunit\framework\db\CommandTest
         parent::testUpsert($firstData, $secondData);
     }
 
-    public function testAddDropPrimaryKey(): void
+    /**
+     * @dataProvider addPrimaryKeyProvider
+     * 
+     * @param string $name
+     * @param string $tableName
+     * @param array $column
+     * @param array $pk
+     *
+     * @phpstan-param list<string> $column
+     * @phpstan-param list<string> $pk
+     */
+    public function testAddDropPrimaryKey(string $name, string $tableName, array $columns, array $pk): void
     {
-        $this->markTestSkipped('SQLite does not support adding/dropping primary keys.');
+        $this->expectException(NotSupportedException::class);
+        $this->expectExceptionMessageMatches(
+            '/^.*::(addPrimaryKey|dropPrimaryKey) is not supported by SQLite\.$/',
+        );
+
+        parent::testAddDropPrimaryKey($name, $tableName, $columns, $pk);
     }
 
     public function testAddDropForeignKey(): void

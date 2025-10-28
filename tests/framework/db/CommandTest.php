@@ -1081,31 +1081,82 @@ SQL;
     }
     */
 
-    public function testAddDropPrimaryKey(): void
+    public static function addPrimaryKeyProvider(): array
+    {
+        return [
+            [
+                'test_pk_constraint_1',
+                'test_pk',
+                [
+                    'int1' => 'integer not null',
+                    'int2' => 'integer not null',
+                ],
+                ['int1'],
+            ],
+            [
+                '{{test_pk_constraint_2}}',
+                '{{test_pk}}',
+                [
+                    'int1' => 'integer not null',
+                    'int2' => 'integer not null',
+                ],
+                ['int1'],
+            ],
+            [
+                'test_pk_constraint_3',
+                'test_pk',
+                [
+                    'int1' => 'integer not null',
+                    'int2' => 'integer not null',
+                ],
+                ['int1', 'int2'],
+            ],
+            [
+                '{{test_pk_constraint_4}}',
+                '{{test_pk}}',
+                [
+                    'int1' => 'integer not null',
+                    'int2' => 'integer not null',
+                ],
+                ['int1', 'int2'],
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider addPrimaryKeyProvider
+     *
+     * @param string $name
+     * @param string $tableName
+     * @param array $column
+     * @param array $pk
+     *
+     * @phpstan-param list<string> $column
+     * @phpstan-param list<string> $pk
+     */
+    public function testAddDropPrimaryKey(string $name, string $tableName, array $columns, array $pk): void
     {
         $db = $this->getConnection(false);
-        $tableName = 'test_pk';
-        $name = 'test_pk_constraint';
-        /** @var \yii\db\pgsql\Schema $schema */
+
         $schema = $db->getSchema();
 
         if ($schema->getTableSchema($tableName) !== null) {
             $db->createCommand()->dropTable($tableName)->execute();
         }
-        $db->createCommand()->createTable($tableName, [
-            'int1' => 'integer not null',
-            'int2' => 'integer not null',
-        ])->execute();
+
+        $db->createCommand()->createTable($tableName, $columns)->execute();
 
         $this->assertNull($schema->getTablePrimaryKey($tableName, true));
-        $db->createCommand()->addPrimaryKey($name, $tableName, ['int1'])->execute();
-        $this->assertEquals(['int1'], $schema->getTablePrimaryKey($tableName, true)->columnNames);
+
+        $db->createCommand()->addPrimaryKey($name, $tableName, $pk)->execute();
+
+        $this->assertSame($pk, $schema->getTablePrimaryKey($tableName, true)->columnNames);
 
         $db->createCommand()->dropPrimaryKey($name, $tableName)->execute();
+
         $this->assertNull($schema->getTablePrimaryKey($tableName, true));
 
-        $db->createCommand()->addPrimaryKey($name, $tableName, ['int1', 'int2'])->execute();
-        $this->assertEquals(['int1', 'int2'], $schema->getTablePrimaryKey($tableName, true)->columnNames);
+        $db->createCommand()->dropTable($tableName)->execute();
     }
 
     public function testAddDropForeignKey(): void

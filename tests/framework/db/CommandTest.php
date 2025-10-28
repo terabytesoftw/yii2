@@ -1087,19 +1087,11 @@ SQL;
             [
                 'test_pk_constraint_1',
                 'test_pk',
-                [
-                    'int1' => 'integer not null',
-                    'int2' => 'integer not null',
-                ],
                 'int1',
             ],
             [
                 '{{test_pk_constraint_2}}',
                 '{{test_pk}}',
-                [
-                    'int1' => 'integer not null',
-                    'int2' => 'integer not null',
-                ],
                 'int1',
             ],
             [
@@ -1114,10 +1106,6 @@ SQL;
             [
                 '{{test_pk_constraint_4}}',
                 '{{test_pk}}',
-                [
-                    'int1' => 'integer not null',
-                    'int2' => 'integer not null',
-                ],
                 ['int1', 'int2'],
             ],
         ];
@@ -1128,13 +1116,11 @@ SQL;
      *
      * @param string $name
      * @param string $tableName
-     * @param array $column
      * @param array|string $pk
      *
-     * @phpstan-param list<string> $column
      * @phpstan-param list<string> $pk
      */
-    public function testAddDropPrimaryKey(string $name, string $tableName, array $columns, $pk): void
+    public function testAddDropPrimaryKey(string $name, string $tableName, $pk): void
     {
         $db = $this->getConnection(false);
 
@@ -1144,7 +1130,13 @@ SQL;
             $db->createCommand()->dropTable($tableName)->execute();
         }
 
-        $db->createCommand()->createTable($tableName, $columns)->execute();
+        $db->createCommand()->createTable(
+            $tableName,
+            [
+                'int1' => 'integer not null',
+                'int2' => 'integer not null',
+            ],
+        )->execute();
 
         $this->assertNull($schema->getTablePrimaryKey($tableName, true));
 
@@ -1159,37 +1151,99 @@ SQL;
         $db->createCommand()->dropTable($tableName)->execute();
     }
 
-    public function testAddDropForeignKey(): void
+    public static function addForeignKeyProvider(): array
+    {
+        return [
+            [
+                'test_fk_constraint_1',
+                'test_fk',
+                'int1',
+                'int3',
+            ],
+            [
+                '{{test_fk_constraint_2}}',
+                '{{test_fk}}',
+                'int1',
+                'int3',
+            ],
+            [
+                'test_fk_constraint_3',
+                'test_fk',
+                ['int1'],
+                ['int3'],
+            ],
+            [
+                '{{test_fk_constraint_4}}',
+                '{{test_fk}}',
+                ['int1'],
+                ['int3'],
+            ],
+            [
+                'test_fk_constraint_5',
+                'test_fk',
+                ['int1', 'int2'],
+                ['int3', 'int4'],
+            ],
+            [
+                '{{test_fk_constraint_6}}',
+                '{{test_fk}}',
+                ['int1', 'int2'],
+                ['int3', 'int4'],
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider addForeignKeyProvider
+     *
+     * @param string $name
+     * @param string $tableName
+     * @param array|string $fkColumns
+     * @param array|string $refColumns
+     *
+     * @phpstan-param list<string> $fkColumns
+     * @phpstan-param list<string> $refColumns
+     */
+    public function testAddDropForeignKey(string $name, string $tableName, $fkColumns, $refColumns): void
     {
         $db = $this->getConnection(false);
-        $tableName = 'test_fk';
-        $name = 'test_fk_constraint';
-        /** @var \yii\db\pgsql\Schema $schema */
+
         $schema = $db->getSchema();
 
         if ($schema->getTableSchema($tableName) !== null) {
             $db->createCommand()->dropTable($tableName)->execute();
         }
-        $db->createCommand()->createTable($tableName, [
-            'int1' => 'integer not null unique',
-            'int2' => 'integer not null unique',
-            'int3' => 'integer not null unique',
-            'int4' => 'integer not null unique',
-            'unique ([[int1]], [[int2]])',
-            'unique ([[int3]], [[int4]])',
-        ])->execute();
+
+        $db->createCommand()->createTable(
+            $tableName,
+            [
+                'int1' => 'integer not null unique',
+                'int2' => 'integer not null unique',
+                'int3' => 'integer not null unique',
+                'int4' => 'integer not null unique',
+                'unique ([[int1]], [[int2]])',
+                'unique ([[int3]], [[int4]])',
+            ],
+        )->execute();
 
         $this->assertEmpty($schema->getTableForeignKeys($tableName, true));
-        $db->createCommand()->addForeignKey($name, $tableName, ['int1'], $tableName, ['int3'])->execute();
-        $this->assertEquals(['int1'], $schema->getTableForeignKeys($tableName, true)[0]->columnNames);
-        $this->assertEquals(['int3'], $schema->getTableForeignKeys($tableName, true)[0]->foreignColumnNames);
+
+        $db->createCommand()->addForeignKey(
+            $name,
+            $tableName,
+            (array) $fkColumns,
+            $tableName,
+            (array) $refColumns,
+        )->execute();
+
+        $this->assertSame((array) $fkColumns, $schema->getTableForeignKeys($tableName, true)[0]->columnNames);
+        $this->assertSame((array) $refColumns, $schema->getTableForeignKeys($tableName, true)[0]->foreignColumnNames);
 
         $db->createCommand()->dropForeignKey($name, $tableName)->execute();
+
         $this->assertEmpty($schema->getTableForeignKeys($tableName, true));
 
-        $db->createCommand()->addForeignKey($name, $tableName, ['int1', 'int2'], $tableName, ['int3', 'int4'])->execute();
-        $this->assertEquals(['int1', 'int2'], $schema->getTableForeignKeys($tableName, true)[0]->columnNames);
-        $this->assertEquals(['int3', 'int4'], $schema->getTableForeignKeys($tableName, true)[0]->foreignColumnNames);
+        $db->createCommand()->dropTable($tableName)->execute();
     }
 
     public function testCreateDropIndex(): void

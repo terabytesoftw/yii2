@@ -1085,24 +1085,22 @@ SQL;
     {
         return [
             [
-                'test_pk_constraint_1',
-                'test_pk',
+                '{{test_pk_constraint_1}}',
+                '{{test_pk}}',
                 'int1',
             ],
             [
                 '{{test_pk_constraint_2}}',
                 '{{test_pk}}',
-                'int1',
+                ['int1'],
             ],
             [
-                'test_pk_constraint_3',
-                'test_pk',
-                ['int1', 'int2'],
-            ],
-            [
-                '{{test_pk_constraint_4}}',
+                '{{test_pk_constraint_3}}',
                 '{{test_pk}}',
-                ['int1', 'int2'],
+                [
+                    'int1',
+                    'int2',
+                ],
             ],
         ];
     }
@@ -1151,40 +1149,28 @@ SQL;
     {
         return [
             [
-                'test_fk_constraint_1',
-                'test_fk',
+                '{{test_fk_constraint_1}}',
+                '{{test_fk}}',
                 'int1',
                 'int3',
             ],
             [
                 '{{test_fk_constraint_2}}',
                 '{{test_fk}}',
-                'int1',
-                'int3',
-            ],
-            [
-                'test_fk_constraint_3',
-                'test_fk',
                 ['int1'],
                 ['int3'],
             ],
             [
-                '{{test_fk_constraint_4}}',
+                '{{test_fk_constraint_3}}',
                 '{{test_fk}}',
-                ['int1'],
-                ['int3'],
-            ],
-            [
-                'test_fk_constraint_5',
-                'test_fk',
-                ['int1', 'int2'],
-                ['int3', 'int4'],
-            ],
-            [
-                '{{test_fk_constraint_6}}',
-                '{{test_fk}}',
-                ['int1', 'int2'],
-                ['int3', 'int4'],
+                [
+                    'int1',
+                    'int2',
+                ],
+                [
+                    'int3',
+                    'int4',
+                ],
             ],
         ];
     }
@@ -1286,31 +1272,68 @@ SQL;
         $this->assertTrue($schema->getTableIndexes($tableName, true)[0]->isUnique);
     }
 
-    public function testAddDropUnique(): void
+    public static function addUniqueProvider(): array
+    {
+        return [
+            [
+                '{{test_unique_constraint_1}}',
+                '{{test_unique}}',
+                'int1',
+            ],
+            [
+                '{{test_unique_constraint_2}}',
+                '{{test_unique}}',
+                ['int1'],
+            ],
+            [
+                '{{test_unique_constraint_3}}',
+                '{{test_unique}}',
+                [
+                    'int1',
+                    'int2',
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider addUniqueProvider
+     *
+     * @param string $name
+     * @param string $tableName
+     * @param array|string $columns
+     *
+     * @phpstan-param list<string> $columns
+     */
+    public function testAddDropUnique(string $name, string $tableName, $columns): void
     {
         $db = $this->getConnection(false);
-        $tableName = 'test_uq';
-        $name = 'test_uq_constraint';
-        /** @var \yii\db\pgsql\Schema $schema */
+
         $schema = $db->getSchema();
 
         if ($schema->getTableSchema($tableName) !== null) {
             $db->createCommand()->dropTable($tableName)->execute();
         }
-        $db->createCommand()->createTable($tableName, [
-            'int1' => 'integer not null',
-            'int2' => 'integer not null',
-        ])->execute();
+
+        $db->createCommand()->createTable(
+            $tableName,
+            [
+                'int1' => 'integer not null',
+                'int2' => 'integer not null',
+            ],
+        )->execute();
 
         $this->assertEmpty($schema->getTableUniques($tableName, true));
-        $db->createCommand()->addUnique($name, $tableName, ['int1'])->execute();
-        $this->assertEquals(['int1'], $schema->getTableUniques($tableName, true)[0]->columnNames);
+
+        $db->createCommand()->addUnique($name, $tableName, $columns)->execute();
+
+        $this->assertEquals($columns, $schema->getTableUniques($tableName, true)[0]->columnNames);
 
         $db->createCommand()->dropUnique($name, $tableName)->execute();
+
         $this->assertEmpty($schema->getTableUniques($tableName, true));
 
-        $db->createCommand()->addUnique($name, $tableName, ['int1', 'int2'])->execute();
-        $this->assertEquals(['int1', 'int2'], $schema->getTableUniques($tableName, true)[0]->columnNames);
+        $db->createCommand()->dropTable($tableName)->execute();
     }
 
     public function testAddDropCheck(): void

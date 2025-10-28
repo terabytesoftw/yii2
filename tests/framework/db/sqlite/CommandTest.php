@@ -83,9 +83,23 @@ class CommandTest extends \yiiunit\framework\db\CommandTest
         parent::testAddDropForeignKey($name, $tableName, $fkColumns, $refColumns);
     }
 
-    public function testAddDropUnique(): void
+    /**
+     * @dataProvider addUniqueProvider
+     *
+     * @param string $name
+     * @param string $tableName
+     * @param array|string $columns
+     *
+     * @phpstan-param list<string> $columns
+     */
+    public function testAddDropUnique(string $name, string $tableName, $columns): void
     {
-        $this->markTestSkipped('SQLite does not support adding/dropping unique constraints.');
+        $this->expectException(NotSupportedException::class);
+        $this->expectExceptionMessageMatches(
+            '/^.*::(addUnique|dropUnique) is not supported by SQLite\.$/',
+        );
+
+        parent::testAddDropUnique($name, $tableName, $columns);
     }
 
     public function testAddDropCheck(): void

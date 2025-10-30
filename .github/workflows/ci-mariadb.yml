@@ -40,6 +40,17 @@ concurrency:
   cancel-in-progress: true
 
 env:
+  MARIADB_DATABASE: yiitest
+  MARIADB_OPTIONS: >-
+    --name=mariadb
+    --health-cmd="mariadb-admin ping"
+    --health-interval=10s
+    --health-retries=3
+    --health-timeout=5s
+    --mount type=tmpfs,destination=/var/lib/mysql
+  MARIADB_PORTS:
+    - 3306:3306
+  MARIADB_ROOT_PASSWORD: root
   PHP_EXTENSIONS: curl, intl, pdo, pdo_mysql
   PHP_INI_VALUES: apc.enabled=1,apc.shm_size=32M,apc.enable_cli=1, date.timezone='UTC'
   PHPUNIT_GROUP: mysql
@@ -66,17 +77,10 @@ jobs:
       mysql:
         image: ${{ matrix.mariadb }}
         env:
-          MARIADB_ROOT_PASSWORD: root
-          MARIADB_DATABASE: yiitest
-        ports:
-          - 3306:3306
-        options: >-
-          --name=mariadb
-          --health-cmd="mariadb-admin ping"
-          --health-interval=10s
-          --health-retries=3
-          --health-timeout=5s
-          --mount type=tmpfs,destination=/var/lib/mysql
+          MARIADB_ROOT_PASSWORD: ${{ env.MARIADB_ROOT_PASSWORD }}
+          MARIADB_DATABASE: ${{ env.MARIADB_DATABASE }}
+        ports: ${{ env.MARIADB_PORTS }}
+        options: ${{ env.MARIADB_OPTIONS }}
 
     steps:
       - name: Monitor action permissions.
@@ -120,17 +124,10 @@ jobs:
       mysql:
         image: ${{ matrix.mariadb }}
         env:
-          MARIADB_ROOT_PASSWORD: root
-          MARIADB_DATABASE: yiitest
-        ports:
-          - 3306:3306
-        options: >-
-          --name=mariadb
-          --health-cmd="mariadb-admin ping"
-          --health-interval=10s
-          --health-retries=3
-          --health-timeout=5s
-          --mount type=tmpfs,destination=/var/lib/mysql
+          MARIADB_ROOT_PASSWORD: ${{ env.MARIADB_ROOT_PASSWORD }}
+          MARIADB_DATABASE: ${{ env.MARIADB_DATABASE }}
+        ports: ${{ env.MARIADB_PORTS }}
+        options: ${{ env.MARIADB_OPTIONS }}
 
     steps:
       - name: Monitor action permissions.

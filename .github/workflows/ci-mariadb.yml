@@ -62,7 +62,7 @@ jobs:
           - mariadb:10.4
           - mariadb:latest
 
-    services:
+    services: &mariadb-service
       mysql:
         image: ${{ matrix.mariadb }}
         env:
@@ -116,21 +116,7 @@ jobs:
         mariadb:
           - mariadb:latest
 
-    services:
-      mysql:
-        image: ${{ matrix.mariadb }}
-        env:
-          MARIADB_ROOT_PASSWORD: root
-          MARIADB_DATABASE: yiitest
-        ports:
-          - 3306:3306
-        options: >-
-          --name=mariadb
-          --health-cmd="mariadb-admin ping"
-          --health-interval=10s
-          --health-retries=3
-          --health-timeout=5s
-          --mount type=tmpfs,destination=/var/lib/mysql
+    services: *mariadb-service
 
     steps:
       - name: Monitor action permissions.

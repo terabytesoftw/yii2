@@ -102,7 +102,7 @@ jobs:
           group: ${{ env.PHPUNIT_GROUP }}
 
   tests-dev:
-    name: PHP ${{ matrix.php }}-${{ matrix.mariadb }} (dev)
+    name: PHP ${{ matrix.php }}-${{ matrix.mariadb }}
 
     env:
       COVERAGE_DRIVER: none

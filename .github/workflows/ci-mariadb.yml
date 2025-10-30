@@ -79,7 +79,7 @@ jobs:
           MARIADB_ROOT_PASSWORD: ${{ env.MARIADB_ROOT_PASSWORD }}
           MARIADB_DATABASE: ${{ env.MARIADB_DATABASE }}
         ports:
-          - ${{ env.MARIADB_PORTS }}
+          ${{ - env.MARIADB_PORTS }}
         options: ${{ env.MARIADB_OPTIONS }}
 
     steps:
@@ -127,7 +127,7 @@ jobs:
           MARIADB_ROOT_PASSWORD: ${{ env.MARIADB_ROOT_PASSWORD }}
           MARIADB_DATABASE: ${{ env.MARIADB_DATABASE }}
         ports:
-          - ${{ env.MARIADB_PORTS }}
+          ${{ - env.MARIADB_PORTS }}
         options: ${{ env.MARIADB_OPTIONS }}
 
     steps:

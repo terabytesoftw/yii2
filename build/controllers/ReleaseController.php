@@ -887,8 +887,9 @@ class ReleaseController extends Controller
             }
             // add continued lines to the last item to keep them together
             if (!empty(${$state}) && trim($line) !== '' && strncmp($line, '- ', 2) !== 0) {
-                end(${$state});
-                ${$state}[key(${$state})] .= "\n" . $line;
+                // Changed from `end()` + `key()` to `array_key_last()` to fix PHPStan error:
+                // `key()` can return null and PHPStan cannot infer that `end()` ensures a valid pointer position
+                ${$state}[array_key_last(${$state})] .= "\n" . $line;
             } else {
                 ${$state}[] = $line;
             }

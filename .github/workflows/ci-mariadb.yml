@@ -78,7 +78,7 @@ jobs:
           --health-timeout=5s
           --mount type=tmpfs,destination=/var/lib/mysql
 
-    steps:
+    steps: &mariadb-steps
       - name: Monitor action permissions.
         if: runner.os != 'Windows'
         uses: GitHubSecurityLab/actions-permissions/monitor@v1
@@ -118,25 +118,4 @@ jobs:
 
     services: *mariadb-service
 
-    steps:
-      - name: Monitor action permissions.
-        if: runner.os != 'Windows'
-        uses: GitHubSecurityLab/actions-permissions/monitor@v1
-
-      - name: Checkout.
-        uses: actions/checkout@v5
-
-      - name: Setup PHP with Composer.
-        uses: ./.github/actions/php-setup
-        with:
-          coverage-driver: ${{ env.COVERAGE_DRIVER }}
-          extensions: ${{ matrix.php < 8.0 && 'apc' || 'apcu' }}, ${{ env.PHP_EXTENSIONS }}
-          ini-values: ${{ env.PHP_INI_VALUES }}, session.save_path="${{ runner.temp }}"
-          php-version: ${{ matrix.php }}
-
-      - name: Run PHPUnit tests.
-        uses: ./.github/actions/phpunit
-        with:
-          coverage-driver: ${{ env.COVERAGE_DRIVER }}
-          coverage-token: ${{ secrets.CODECOV_TOKEN }}
-          group: ${{ env.PHPUNIT_GROUP }}
+    steps: *mariadb-steps

@@ -48,7 +48,8 @@ env:
     --health-retries=3
     --health-timeout=5s
     --mount type=tmpfs,destination=/var/lib/mysql
-  MARIADB_PORTS: 3306:3306
+  MARIADB_PORTS: >-
+    - 3306:3306
   MARIADB_ROOT_PASSWORD: root
   PHP_EXTENSIONS: curl, intl, pdo, pdo_mysql
   PHP_INI_VALUES: apc.enabled=1,apc.shm_size=32M,apc.enable_cli=1, date.timezone='UTC'
@@ -78,8 +79,7 @@ jobs:
         env:
           MARIADB_ROOT_PASSWORD: ${{ env.MARIADB_ROOT_PASSWORD }}
           MARIADB_DATABASE: ${{ env.MARIADB_DATABASE }}
-        ports:
-          ${{ - env.MARIADB_PORTS }}
+        ports: ${{ env.MARIADB_PORTS }}
         options: ${{ env.MARIADB_OPTIONS }}
 
     steps:
@@ -126,8 +126,7 @@ jobs:
         env:
           MARIADB_ROOT_PASSWORD: ${{ env.MARIADB_ROOT_PASSWORD }}
           MARIADB_DATABASE: ${{ env.MARIADB_DATABASE }}
-        ports:
-          ${{ - env.MARIADB_PORTS }}
+        ports: ${{ env.MARIADB_PORTS }}
         options: ${{ env.MARIADB_OPTIONS }}
 
     steps:

@@ -191,7 +191,7 @@ abstract class ManagerTestCase extends TestCase
                 'updateAnyPost' => true,
                 'blablabla' => false,
                 // using null as an array offset is deprecated in PHP 8.5
-                PHP_VERSION >= 80500 ? '' : null => false,
+                PHP_VERSION_ID >= 80500 ? '' : null => false,
             ],
             'guest' => [
                 // all actions denied for guest (user not exists)
@@ -202,7 +202,7 @@ abstract class ManagerTestCase extends TestCase
                 'updateAnyPost' => false,
                 'blablabla' => false,
                 // using null as an array offset is deprecated in PHP 8.5
-                PHP_VERSION >= 80500 ? '' : null => false,
+                PHP_VERSION_ID >= 80500 ? '' : null => false,
             ],
         ];
 

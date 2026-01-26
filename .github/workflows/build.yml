@@ -1,4 +1,3 @@
----
 name: build
 
 permissions:
@@ -79,7 +78,7 @@ jobs:
         run: sudo locale-gen fr_FR.UTF-8
 
       - name: Setup PHP with Composer.
-        uses: ./.github/actions/php-setup
+        uses: yiisoft/yii2-actions/actions/php-setup@master
         with:
           coverage-driver: ${{ env.COVERAGE_DRIVER }}
           extensions: ${{ matrix.php < 8.0 && 'apc' || 'apcu' }}, ${{ env.PHP_EXTENSIONS }}
@@ -88,7 +87,7 @@ jobs:
           php-version: ${{ matrix.php }}
 
       - name: Run PHPUnit tests.
-        uses: ./.github/actions/phpunit
+        uses: yiisoft/yii2-actions/actions/phpunit@master
         with:
           coverage-driver: ${{ env.COVERAGE_DRIVER }}
           coverage-token: ${{ secrets.CODECOV_TOKEN }}

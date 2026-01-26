@@ -37,4 +37,5 @@ jobs:
   phpcs:
     uses: yiisoft/yii2-actions/.github/workflows/linter.yml@master
     with:
+      composer-command: install
       directories: framework/ tests/ build/

@@ -41,7 +41,6 @@ jobs:
       configuration: phpstan.dist.neon
       concurrency-group: phpstan-${{ github.ref }}
       extension: apcu, curl, dom, imagick, intl, mbstring, mcrypt, memcached
-      php-ini-values: pc.enabled=1,apc.shm_size=32M,apc.enable_cli=1, date.timezone='UTC', session.save_path="${{ runner.temp }}"
       php-version: '["8.5"]'
 
   phpstan-7x:
@@ -50,5 +49,4 @@ jobs:
       configuration: phpstan-7x.dist.neon
       concurrency-group: phpstan7x-${{ github.ref }}
       extensions: apc, curl, dom, imagick, intl, mbstring, mcrypt, memcached
-      php-ini-values: pc.enabled=1,apc.shm_size=32M,apc.enable_cli=1, date.timezone='UTC', session.save_path="${{ runner.temp }}"
       php-version: '["7.4"]'

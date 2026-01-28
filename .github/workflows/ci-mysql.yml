@@ -36,7 +36,7 @@ on:
 
 jobs:
   tests:
-    name: PHP ${{ matrix.php }}-mysql-${{ matrix.mysql }}
+    name: PHP ${{ matrix.php-version }}-mysql-${{ matrix.mysql }}
     uses: yiisoft/yii2-actions/.github/workflows/database.yml@master
     with:
       concurrency-group: mysql-${{ github.ref }}
@@ -56,7 +56,7 @@ jobs:
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   tests-dev:
-    name: PHP ${{ matrix.php }}-mysql-${{ matrix.mysql }}
+    name: PHP ${{ matrix.php-version }}-mysql-${{ matrix.mysql }}
     uses: yiisoft/yii2-actions/.github/workflows/database.yml@master
     with:
       concurrency-group: mysql-latest-${{ github.ref }}

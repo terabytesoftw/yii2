@@ -56,7 +56,7 @@ jobs:
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   tests-dev:
-    name: MySQL Development Tests
+    name: MySQL Tests
     uses: yiisoft/yii2-actions/.github/workflows/database.yml@master
     with:
       concurrency-group: mysql-latest-${{ github.ref }}

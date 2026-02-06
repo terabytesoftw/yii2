@@ -42,8 +42,8 @@ jobs:
       concurrency-group: oracle-${{ github.ref }}
       coverage-driver: xdebug
       database-env: '{"ORACLE_ALLOW_REMOTE":"true"}'
-      database-health-cmd: "bash -lc 'echo exit | sqlplus -s system/oracle@//localhost:1521/XE'"
-      database-health-retries: 30
+      database-health-cmd: "bash -lc 'echo > /dev/tcp/localhost/1521'"
+      database-health-retries: 60
       database-image: wnameless/oracle-xe-11g-r2
       database-port: "1521"
       database-type: oracle

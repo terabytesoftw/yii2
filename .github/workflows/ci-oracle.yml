@@ -47,7 +47,7 @@ jobs:
       database-image: gvenzl/oracle-xe
       database-port: "1521"
       database-type: oracle
-      database-versions: '["11-slim-faststart"]'
+      database-versions: '["11"]'
       extensions: curl, intl, oci8, pdo, pdo_oci
       os: '["ubuntu-latest"]'
       php-version: '["7.4"]'

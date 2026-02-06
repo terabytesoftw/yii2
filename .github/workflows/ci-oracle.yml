@@ -41,7 +41,6 @@ jobs:
     with:
       concurrency-group: oracle-${{ github.ref }}
       coverage-driver: xdebug
-      database-health-cmd: bash -c 'echo exit | sqlplus -s system/oracle@//localhost:1521/XE'
       database-health-retries: 30
       database-image: wnameless/oracle-xe-11g-r2
       database-port: "1521"

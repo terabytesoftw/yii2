@@ -41,13 +41,13 @@ jobs:
     with:
       concurrency-group: oracle-${{ github.ref }}
       coverage-driver: xdebug
-      database-env: '{"ORACLE_PASSWORD":"oracle","APP_USER":"yiitest","APP_USER_PASSWORD":"yiitest"}'
-      database-health-cmd: healthcheck.sh
-      database-health-retries: 10
-      database-image: gvenzl/oracle-xe
+      database-env: '{"ORACLE_ALLOW_REMOTE":"true"}'
+      database-health-cmd: "bash -lc 'echo exit | sqlplus -s system/oracle@//localhost:1521/XE'"
+      database-health-retries: 30
+      database-image: wnameless/oracle-xe-11g-r2
       database-port: "1521"
       database-type: oracle
-      database-versions: '["11-slim-faststart"]'
+      database-versions: '["latest"]'
       extensions: curl, intl, oci8, pdo, pdo_oci
       os: '["ubuntu-latest"]'
       php-version: '["7.4"]'

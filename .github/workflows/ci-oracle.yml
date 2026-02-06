@@ -41,11 +41,13 @@ jobs:
     with:
       concurrency-group: oracle-${{ github.ref }}
       coverage-driver: xdebug
-      database-health-retries: 30
-      database-image: wnameless/oracle-xe-11g-r2
+      database-env: '{"ORACLE_PASSWORD":"oracle"}'
+      database-health-cmd: healthcheck.sh
+      database-health-retries: 10
+      database-image: gvenzl/oracle-xe
       database-port: "1521"
       database-type: oracle
-      database-versions: '["latest"]'
+      database-versions: '["11-slim-faststart"]'
       extensions: curl, intl, oci8, pdo, pdo_oci
       os: '["ubuntu-latest"]'
       php-version: '["7.4"]'

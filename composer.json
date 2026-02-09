@@ -124,8 +124,8 @@
         }
     },
     "scripts": {
-        "cs": "./vendor/bin/phpcs -q src tests",
-        "cs-fix": "./vendor/bin/phpcbf -q src tests",
+        "cs": "./vendor/bin/phpcs -q framework tests",
+        "cs-fix": "./vendor/bin/phpcbf -q framework tests",
         "static": "./vendor/bin/phpstan --memory-limit=-1",
         "tests": "./vendor/bin/phpunit --exclude-group=db,wincache",
         "mysql": "./vendor/bin/phpunit --group=mysql",

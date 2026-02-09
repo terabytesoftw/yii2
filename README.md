@@ -107,9 +107,21 @@ If your code is hosted at GitHub, you can place the following in your README.md 
 [![Yii2](https://img.shields.io/badge/Powered_by-Yii_Framework-green.svg?style=for-the-badge&logo=yii)](https://www.yiiframework.com/)
 ```
 
+## Documentation
+
+- [Internals](docs/internals.md)
+
 ### Sponsoring
 
 Support this project by becoming a sponsor or a backer. 
 
 [![Open Collective sponsors](https://img.shields.io/opencollective/sponsors/yiisoft?style=for-the-badge&logo=opencollective)](https://opencollective.com/yiisoft) 
 [![Open Collective backers](https://img.shields.io/opencollective/backers/yiisoft?style=for-the-badge&logo=opencollective)](https://opencollective.com/yiisoft)
+
+## Follow updates
+
+[![Official website](https://img.shields.io/badge/Powered_by-Yii_Framework-green.svg?style=for-the-badge&logo=yii)](https://www.yiiframework.com/)
+[![Follow on X](https://img.shields.io/badge/-Follow%20on%20X-1DA1F2.svg?style=for-the-badge&logo=x&logoColor=white&labelColor=000000)](https://x.com/yiiframework)
+[![Telegram](https://img.shields.io/badge/telegram-join-1DA1F2?style=for-the-badge&logo=telegram)](https://t.me/yii_framework_in_english)
+[![Slack](https://img.shields.io/badge/slack-join-1DA1F2?style=for-the-badge&logo=slack)](https://yiiframework.com/go/slack)
+

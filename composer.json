@@ -122,5 +122,16 @@
         "branch-alias": {
             "dev-master": "2.0.x-dev"
         }
+    },
+    "scripts": {
+        "cs": "./vendor/bin/phpcs -q src tests",
+        "cs-fix": "./vendor/bin/phpcbf -q src tests",
+        "static": "./vendor/bin/phpstan --memory-limit=-1",
+        "tests": "./vendor/bin/phpunit --exclude-group=db,wincache",
+        "mysql": "./vendor/bin/phpunit --group=mysql",
+        "mssql": "./vendor/bin/phpunit --group=mssql",
+        "oracle": "./vendor/bin/phpunit --group=oracle",
+        "pgsql": "./vendor/bin/phpunit --group=pgsql",
+        "sqlite": "./vendor/bin/phpunit --group=sqlite"
     }
 }

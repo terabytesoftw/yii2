@@ -68,9 +68,8 @@ Run tests SQLite database.
 composer sqlite
 ```
 
-> [!INFO]
-> To run tests for MSSQL, MySQL, Oracle, or PostgreSQL databases, ensure the corresponding database server is running
-> and accessible.
+> [!NOTE]
+> To run tests for MSSQL, MySQL, Oracle, or PostgreSQL databases, ensure the corresponding database server is running and accessible.
 
 
 ## Passing extra arguments

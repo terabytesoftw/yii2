@@ -193,6 +193,20 @@ class FormatConverterTest extends TestCase
         $this->assertEquals('\'o\'\'clock\'', FormatConverter::convertDateIcuToJui('\'o\'\'clock\''));
     }
 
+    public function testIcuShortPatternFallbackWithoutIntl(): void
+    {
+        $this->assertSame(
+            'n/j/y',
+            FormatConverter::convertDateIcuToPhp('short', 'date'),
+            'ICU short PHP pattern should use fallback mapping when intl is disabled.'
+        );
+        $this->assertSame(
+            'd/m/y',
+            FormatConverter::convertDateIcuToJui('short', 'date'),
+            'ICU short jQuery UI pattern should use fallback mapping when intl is disabled.'
+        );
+    }
+
     public function testIntlIcuToJuiShortForm(): void
     {
         $this->assertEquals('m/d/y', FormatConverter::convertDateIcuToJui('short', 'date', 'en-US'));
@@ -351,6 +365,24 @@ class FormatConverterTest extends TestCase
         $this->assertEquals('24.8.2014', $formatter->asDate('2014-8-24', 'd.L.yyyy'));
     }
 
+    public function testIcuToPhpRoundTripWithEscapedLiterals(): void
+    {
+        $formatter = new Formatter(['locale' => 'en-US']);
+
+        $format = "'M:'M";
+
+        $this->assertSame(
+            'M:8',
+            $formatter->asDate('2014-8-24', $format),
+            'ICU format should keep the escaped colon as a literal.',
+        );
+        $this->assertSame(
+            $formatter->asDate('2014-8-24', $format),
+            $formatter->asDate('2014-8-24', 'php:' . FormatConverter::convertDateIcuToPhp($format)),
+            'ICU->PHP conversion should preserve escaped literals when formatting through php: prefix.'
+        );
+    }
+
     public function testIntlUtf8Ru(): void
     {
         $this->assertEquals('d M Y \г.', FormatConverter::convertDateIcuToPhp("dd MMM y 'г'.", 'date', 'ru-RU'));
@@ -435,6 +467,7 @@ class FormatConverterTest extends TestCase
             'Uppercase Ante meridiem and Post meridiem, AM or PM, not supported by ICU but we fallback to lowercase' => ['A', 'a'],
             '\B' => ['\B', "'B'"],
             '\A\B' => ['\A\B', "'AB'"],
+            '\:' => ['\:', "':'"],
             'Swatch Internet time 000 through 999' => ['B', ''],
             '\g' => ['\g', "'g'"],
             '12-hour format of an hour without leading zeros 1 through 12' => ['g', 'h'],

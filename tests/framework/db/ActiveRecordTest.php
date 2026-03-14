@@ -1354,9 +1354,68 @@ abstract class ActiveRecordTest extends DatabaseTestCase
         // request the inverseOf relation as array
         $orders2 = $customer->getOrders2()->asArray()->all();
         $this->assertEquals($customer['id'], $orders2[0]['customer2']['id']);
+        $this->assertIsArray($orders2[0]['customer2']);
 
         $orders2 = $customer->getOrders2()->asArray()->one();
         $this->assertEquals($customer['id'], $orders2['customer2']['id']);
+        $this->assertIsArray($orders2['customer2']);
+    }
+
+    public function testInverseOfMixedAsArrayHasMany(): void
+    {
+        $customer = Customer::find()
+            ->where(['id' => 1])
+            ->with([
+                'orders2' => function (ActiveQuery $query) {
+                    $query->asArray(true);
+                },
+            ])
+            ->one();
+
+        $this->assertIsArray($customer->orders2[0]);
+        $this->assertIsArray($customer->orders2[0]['customer2']);
+        $this->assertSame($customer->id, $customer->orders2[0]['customer2']['id']);
+    }
+
+    public function testInverseOfMixedAsArrayHasOne(): void
+    {
+        $order = Order::find()
+            ->where(['id' => 1])
+            ->with([
+                'customer2' => function (ActiveQuery $query) {
+                    $query->asArray(true);
+                },
+            ])
+            ->one();
+
+        $this->assertIsArray($order->customer2);
+        $this->assertIsArray($order->customer2['orders2']);
+        $this->assertIsArray($order->customer2['orders2'][0]);
+        $this->assertSame($order->id, $order->customer2['orders2'][0]['id']);
+    }
+
+    public function testInverseOfMixedAsArrayHasOneWithMixedPrimaryModels(): void
+    {
+        $orderModel = Order::findOne(2);
+        $orderArray = Order::find()->where(['id' => 3])->asArray()->one();
+        $this->assertInstanceOf(Order::class, $orderModel);
+        $this->assertIsArray($orderArray);
+        $primaryModels = [$orderModel, $orderArray];
+
+        Order::find()->findWith([
+            'customer2' => function (ActiveQuery $query) {
+                $query->asArray(true);
+            },
+        ], $primaryModels);
+
+        $this->assertIsArray($orderModel->customer2);
+        $this->assertIsArray($orderModel->customer2['orders2'][0]);
+        $this->assertIsArray($primaryModels[1]['customer2']);
+        $this->assertNotEmpty($primaryModels[1]['customer2']['orders2']);
+
+        foreach ($primaryModels[1]['customer2']['orders2'] as $relatedOrder) {
+            $this->assertIsArray($relatedOrder);
+        }
     }
 
     public function testDefaultValues(): void

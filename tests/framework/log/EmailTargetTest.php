@@ -181,25 +181,77 @@ class EmailTargetTest extends TestCase
  */
 class TestMessage extends BaseMessage
 {
-    public function getCharset() {}
-    public function setCharset($charset) { return $this; }
-    public function getFrom() {}
-    public function setFrom($from) { return $this; }
-    public function getTo() {}
-    public function setTo($to) { return $this; }
-    public function getCc() {}
-    public function setCc($cc) { return $this; }
-    public function getBcc() {}
-    public function setBcc($bcc) { return $this; }
-    public function getSubject() {}
-    public function setSubject($subject) { return $this; }
-    public function getReplyTo() {}
-    public function setReplyTo($replyTo) { return $this; }
-    public function setTextBody($text) { return $this; }
-    public function setHtmlBody($html) { return $this; }
-    public function attachContent($content, array $options = []): void {}
-    public function attach($fileName, array $options = []): void {}
-    public function embed($fileName, array $options = []): void {}
-    public function embedContent($content, array $options = []): void {}
-    public function toString() { return ''; }
+    public function getCharset()
+    {
+    }
+    public function setCharset($charset)
+    {
+        return $this;
+    }
+    public function getFrom()
+    {
+    }
+    public function setFrom($from)
+    {
+        return $this;
+    }
+    public function getTo()
+    {
+    }
+    public function setTo($to)
+    {
+        return $this;
+    }
+    public function getCc()
+    {
+    }
+    public function setCc($cc)
+    {
+        return $this;
+    }
+    public function getBcc()
+    {
+    }
+    public function setBcc($bcc)
+    {
+        return $this;
+    }
+    public function getSubject()
+    {
+    }
+    public function setSubject($subject)
+    {
+        return $this;
+    }
+    public function getReplyTo()
+    {
+    }
+    public function setReplyTo($replyTo)
+    {
+        return $this;
+    }
+    public function setTextBody($text)
+    {
+        return $this;
+    }
+    public function setHtmlBody($html)
+    {
+        return $this;
+    }
+    public function attachContent($content, array $options = []): void
+    {
+    }
+    public function attach($fileName, array $options = []): void
+    {
+    }
+    public function embed($fileName, array $options = []): void
+    {
+    }
+    public function embedContent($content, array $options = []): void
+    {
+    }
+    public function toString()
+    {
+        return '';
+    }
 }

@@ -16,7 +16,7 @@ use yiiunit\data\base\TraversableObject;
  * @group db
  * @group mssql
  */
-class QueryBuilderTest extends \yiiunit\framework\db\QueryBuilderTest
+class QueryBuilderTest extends \yiiunit\base\db\BaseQueryBuilder
 {
     public $driverName = 'sqlsrv';
     public static string $driverNameStatic = 'sqlsrv';

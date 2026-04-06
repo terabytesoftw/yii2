@@ -1,10 +1,11 @@
 <?php
 
-namespace yiiunit\framework\db;
+namespace yiiunit\base\db;
 
 use yiiunit\data\ar\ActiveRecord;
+use yiiunit\framework\db\DatabaseTestCase;
 
-abstract class BaseActiveRecordTest extends DatabaseTestCase
+abstract class BaseActiveRecordTemplate extends DatabaseTestCase
 {
     protected function setUp(): void
     {

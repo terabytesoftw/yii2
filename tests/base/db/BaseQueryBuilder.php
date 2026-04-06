@@ -6,8 +6,9 @@
  * @license https://www.yiiframework.com/license/
  */
 
-namespace yiiunit\framework\db;
+namespace yiiunit\base\db;
 
+use yiiunit\framework\db\DatabaseTestCase;
 use Yii;
 use Exception;
 use Closure;
@@ -30,7 +31,7 @@ use yii\db\sqlite\QueryBuilder as SqliteQueryBuilder;
 use yii\helpers\ArrayHelper;
 use yiiunit\data\base\TraversableObject;
 
-abstract class QueryBuilderTest extends DatabaseTestCase
+abstract class BaseQueryBuilder extends DatabaseTestCase
 {
     use SchemaBuilderTrait;
 

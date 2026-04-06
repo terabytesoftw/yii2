@@ -123,37 +123,37 @@ namespace yiiunit\framework\log {
                 ->method('syslog')
                 ->willReturnCallback(
                     function (...$parameters) use ($matcher): void {
-                        if ($matcher->getInvocationCount() === 1) {
+                        if ($matcher->numberOfInvocations() === 1) {
                             $this->assertEquals(LOG_INFO, $parameters[0]);
                             $this->assertEquals('formatted message 1', $parameters[1]);
                         }
 
-                        if ($matcher->getInvocationCount() === 2) {
+                        if ($matcher->numberOfInvocations() === 2) {
                             $this->assertEquals(LOG_ERR, $parameters[0]);
                             $this->assertEquals('formatted message 2', $parameters[1]);
                         }
 
-                        if ($matcher->getInvocationCount() === 3) {
+                        if ($matcher->numberOfInvocations() === 3) {
                             $this->assertEquals(LOG_WARNING, $parameters[0]);
                             $this->assertEquals('formatted message 3', $parameters[1]);
                         }
 
-                        if ($matcher->getInvocationCount() === 4) {
+                        if ($matcher->numberOfInvocations() === 4) {
                             $this->assertEquals(LOG_DEBUG, $parameters[0]);
                             $this->assertEquals('formatted message 4', $parameters[1]);
                         }
 
-                        if ($matcher->getInvocationCount() === 5) {
+                        if ($matcher->numberOfInvocations() === 5) {
                             $this->assertEquals(LOG_DEBUG, $parameters[0]);
                             $this->assertEquals('formatted message 5', $parameters[1]);
                         }
 
-                        if ($matcher->getInvocationCount() === 6) {
+                        if ($matcher->numberOfInvocations() === 6) {
                             $this->assertEquals(LOG_DEBUG, $parameters[0]);
                             $this->assertEquals('formatted message 6', $parameters[1]);
                         }
 
-                        if ($matcher->getInvocationCount() === 7) {
+                        if ($matcher->numberOfInvocations() === 7) {
                             $this->assertEquals(LOG_DEBUG, $parameters[0]);
                             $this->assertEquals('formatted message 7', $parameters[1]);
                         }

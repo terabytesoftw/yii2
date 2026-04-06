@@ -22,7 +22,7 @@ use yiiunit\data\base\TraversableObject;
  * @group db
  * @group pgsql
  */
-class QueryBuilderTest extends \yiiunit\framework\db\QueryBuilderTest
+class QueryBuilderTest extends \yiiunit\base\db\BaseQueryBuilder
 {
     public $driverName = 'pgsql';
     protected static string $driverNameStatic = 'pgsql';

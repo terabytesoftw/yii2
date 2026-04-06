@@ -21,7 +21,7 @@ use yiiunit\data\base\TraversableObject;
  * @group db
  * @group oci
  */
-class QueryBuilderTest extends \yiiunit\framework\db\QueryBuilderTest
+class QueryBuilderTest extends \yiiunit\base\db\BaseQueryBuilder
 {
     public $driverName = 'oci';
     protected static string $driverNameStatic = 'oci';

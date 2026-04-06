@@ -21,7 +21,7 @@ use yiiunit\data\base\TraversableObject;
  * @group db
  * @group sqlite
  */
-class QueryBuilderTest extends \yiiunit\framework\db\QueryBuilderTest
+class QueryBuilderTest extends \yiiunit\base\db\BaseQueryBuilder
 {
     protected $driverName = 'sqlite';
     protected static string $driverNameStatic = 'sqlite';

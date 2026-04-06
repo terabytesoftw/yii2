@@ -271,14 +271,14 @@ class TargetTest extends TestCase
             ->method('dispatch')
             ->willReturnCallback(
                 function (...$parameters) use ($matcher): void {
-                    if ($matcher->getInvocationCount() === 1) {
+                    if ($matcher->numberOfInvocations() === 1) {
                         $callback = fn($messages): bool => count($messages) === 1 && $messages[0][0] === 'info';
 
                         $this->assertTrue($callback($parameters[0]));
                         $this->assertFalse($parameters[1]);
                     }
 
-                    if ($matcher->getInvocationCount() === 2) {
+                    if ($matcher->numberOfInvocations() === 2) {
                         $callback = fn($messages): bool => count($messages) === 2
                             && $messages[0][0] === 'token.a'
                             && $messages[0][1] === Logger::LEVEL_PROFILE_BEGIN
@@ -315,7 +315,7 @@ class TargetTest extends TestCase
             ->method('dispatch')
             ->willReturnCallback(
                 function (...$parameters) use ($matcher): void {
-                    if ($matcher->getInvocationCount() === 1) {
+                    if ($matcher->numberOfInvocations() === 1) {
                         $callback = fn($messages): bool => count($messages) === 2
                             && $messages[0][0] === 'token.a'
                             && $messages[0][1] === Logger::LEVEL_PROFILE_BEGIN
@@ -326,7 +326,7 @@ class TargetTest extends TestCase
                         $this->assertFalse($parameters[1]);
                     }
 
-                    if ($matcher->getInvocationCount() === 2) {
+                    if ($matcher->numberOfInvocations() === 2) {
                         $callback = fn($messages): bool => count($messages) === 1
                             && $messages[0][0] === 'Number of dangling profiling block messages reached flushInterval value and therefore these were flushed. Please consider setting higher flushInterval value or making profiling blocks shorter.';
 
@@ -334,7 +334,7 @@ class TargetTest extends TestCase
                         $this->assertFalse($parameters[1]);
                     }
 
-                    if ($matcher->getInvocationCount() === 3) {
+                    if ($matcher->numberOfInvocations() === 3) {
                         $callback = fn($messages): bool => count($messages) === 2
                             && $messages[0][0] === 'token.b'
                             && $messages[0][1] === Logger::LEVEL_PROFILE_END

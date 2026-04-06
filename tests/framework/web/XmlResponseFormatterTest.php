@@ -18,7 +18,7 @@ use yiiunit\framework\web\stubs\ModelStub;
  *
  * @group web
  */
-class XmlResponseFormatterTest extends FormatterTest
+class XmlResponseFormatterTest extends \yiiunit\base\web\BaseFormatter
 {
     /**
      * @param array $options

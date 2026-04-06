@@ -66,7 +66,7 @@ abstract class BaseMessageController extends TestCase
     protected function createMessageController()
     {
         $module = $this->getMockBuilder(Module::class)
-            ->addMethods(['fake'])
+            ->onlyMethods([])
             ->setConstructorArgs(['console'])
             ->getMock();
 

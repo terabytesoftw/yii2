@@ -78,7 +78,7 @@
         "cebe/indent": "~1.0.2",
         "dealerdirect/phpcodesniffer-composer-installer": "*",
         "php-forge/foxy": "^0.2",
-        "phpunit/phpunit": "^12.5",
+        "phpunit/phpunit": "^11.5",
         "yiisoft/yii2-coding-standards": "^3.0",
         "phpstan/phpstan": "^2.1",
         "phpstan/phpstan-phpunit": "^2.0"

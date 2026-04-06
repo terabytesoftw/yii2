@@ -76,9 +76,8 @@ namespace yiiunit\framework\log {
             ];
 
             /** @var SyslogTarget $syslogTarget */
-            $syslogTarget = $this->getMockBuilder(SyslogTarget::class)
-                ->addMethods(['openlog', 'syslog', 'closelog'])
-                ->onlyMethods(['formatMessage'])
+            $syslogTarget = $this->getMockBuilder(SyslogTargetStub::class)
+                ->onlyMethods(['openlog', 'syslog', 'closelog', 'formatMessage'])
                 ->getMock();
 
             $syslogTarget->identity = $identity;
@@ -94,25 +93,19 @@ namespace yiiunit\framework\log {
                     $this->equalTo($facility)
                 );
 
-            $syslogTarget->expects($this->exactly(7))
+            $formatMatcher = $this->exactly(7);
+            $syslogTarget
+                ->expects($formatMatcher)
                 ->method('formatMessage')
-                ->withConsecutive(
-                    [$this->equalTo($messages[0])],
-                    [$this->equalTo($messages[1])],
-                    [$this->equalTo($messages[2])],
-                    [$this->equalTo($messages[3])],
-                    [$this->equalTo($messages[4])],
-                    [$this->equalTo($messages[5])],
-                    [$this->equalTo($messages[6])]
-                )->willReturnMap([
-                    [$messages[0], 'formatted message 1'],
-                    [$messages[1], 'formatted message 2'],
-                    [$messages[2], 'formatted message 3'],
-                    [$messages[3], 'formatted message 4'],
-                    [$messages[4], 'formatted message 5'],
-                    [$messages[5], 'formatted message 6'],
-                    [$messages[6], 'formatted message 7'],
-                ]);
+                ->willReturnCallback(
+                    function (...$parameters) use ($formatMatcher, $messages): string {
+                        $invocation = $formatMatcher->numberOfInvocations();
+
+                        $this->assertEquals($messages[$invocation - 1], $parameters[0]);
+
+                        return 'formatted message ' . $invocation;
+                    }
+                );
 
             /**
              * @link https://github.com/sebastianbergmann/phpunit/issues/5063
@@ -188,9 +181,8 @@ namespace yiiunit\framework\log {
         public function testFailedExport(): void
         {
             /** @var SyslogTarget $syslogTarget */
-            $syslogTarget = $this->getMockBuilder(SyslogTarget::class)
-                ->addMethods(['openlog', 'syslog', 'closelog'])
-                ->onlyMethods(['formatMessage'])
+            $syslogTarget = $this->getMockBuilder(SyslogTargetStub::class)
+                ->onlyMethods(['openlog', 'syslog', 'closelog', 'formatMessage'])
                 ->getMock();
 
             $syslogTarget->method('syslog')->willReturn(false);
@@ -287,6 +279,25 @@ namespace yiiunit\framework\log {
 
             $result = $this->syslogTarget->formatMessage($message);
             $this->assertEquals('some prefix[error][category] ' . VarDumper::export($text), $result);
+        }
+    }
+
+    /**
+     * Stub subclass that declares native syslog wrappers as instance methods so PHPUnit mocks
+     * can set expectations on them without using the deprecated MockBuilder::addMethods().
+     */
+    class SyslogTargetStub extends SyslogTarget
+    {
+        public function openlog($identity, $options, $facility)
+        {
+        }
+
+        public function syslog($priority, $message)
+        {
+        }
+
+        public function closelog()
+        {
         }
     }
 }

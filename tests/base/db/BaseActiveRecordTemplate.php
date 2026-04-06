@@ -13,7 +13,7 @@ abstract class BaseActiveRecordTemplate extends DatabaseTestCase
         ActiveRecord::$db = $this->getConnection();
     }
 
-    public function provideArrayValueWithChange()
+    public static function provideArrayValueWithChange()
     {
         return [
             'not an associative array with data change' => [

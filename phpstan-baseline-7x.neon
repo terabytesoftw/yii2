@@ -55,87 +55,15 @@ parameters:
 			path: framework/db/QueryBuilder.php
 
 		-
-			message: '#^Function str_contains not found\.$#'
-			identifier: function.notFound
-			count: 1
-			path: framework/db/sqlite/Schema.php
-
-		-
-			message: '#^Call to method getName\(\) on an unknown class ReflectionIntersectionType\.$#'
-			identifier: class.notFound
-			count: 1
-			path: framework/di/Container.php
-
-		-
-			message: '#^Call to method getName\(\) on an unknown class ReflectionUnionType\.$#'
-			identifier: class.notFound
-			count: 1
-			path: framework/di/Container.php
-
-		-
-			message: '#^Call to method getTypes\(\) on an unknown class ReflectionIntersectionType\.$#'
-			identifier: class.notFound
-			count: 1
-			path: framework/di/Container.php
-
-		-
-			message: '#^Call to method getTypes\(\) on an unknown class ReflectionUnionType\.$#'
-			identifier: class.notFound
-			count: 1
-			path: framework/di/Container.php
-
-		-
-			message: '#^Class ReflectionIntersectionType not found\.$#'
-			identifier: class.notFound
-			count: 1
-			path: framework/di/Container.php
-
-		-
-			message: '#^Class ReflectionUnionType not found\.$#'
-			identifier: class.notFound
-			count: 1
-			path: framework/di/Container.php
-
-		-
-			message: '#^Call to method allowsNull\(\) on an unknown class ReflectionUnionType\.$#'
-			identifier: class.notFound
-			count: 1
-			path: framework/web/Controller.php
-
-		-
-			message: '#^Call to method getTypes\(\) on an unknown class ReflectionUnionType\.$#'
-			identifier: class.notFound
-			count: 1
-			path: framework/web/Controller.php
-
-		-
-			message: '#^Cannot call method getName\(\) on class\-string\|object\.$#'
-			identifier: method.nonObject
+			message: '#^Call to an undefined method ReflectionType\:\:getName\(\)\.$#'
+			identifier: method.notFound
 			count: 2
-			path: framework/web/Controller.php
-
-		-
-			message: '#^Class ReflectionUnionType not found\.$#'
-			identifier: class.notFound
-			count: 1
-			path: framework/web/Controller.php
-
-		-
-			message: '#^Parameter \$type of method yii\\web\\Controller\:\:filterUnionTypeActionParam\(\) has invalid type ReflectionUnionType\.$#'
-			identifier: class.notFound
-			count: 1
 			path: framework/web/Controller.php
 
 		-
 			message: '#^Access to constant Active on an unknown class yiiunit\\framework\\db\\enums\\StatusTypeString\.$#'
 			identifier: class.notFound
 			count: 3
-			path: tests/framework/behaviors/AttributeTypecastBehaviorTest.php
-
-		-
-			message: '#^Class ValueError not found\.$#'
-			identifier: class.notFound
-			count: 1
 			path: tests/framework/behaviors/AttributeTypecastBehaviorTest.php
 
 		-

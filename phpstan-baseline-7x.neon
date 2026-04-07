@@ -77,9 +77,3 @@ parameters:
 			identifier: class.notFound
 			count: 1
 			path: tests/framework/behaviors/AttributeTypecastBehaviorTest.php
-
-		-
-			message: '#^Access to an undefined property yiiunit\\framework\\base\\NewComponent\:\:\$as f\.$#'
-			identifier: property.notFound
-			count: 1
-			path: tests/framework/base/ComponentTest.php

@@ -389,7 +389,8 @@ class ComponentTest extends TestCase
         }
 
         $component = new NewComponent();
-        $component->{'as f'} = function () {
+        $asF = 'as f';
+        $component->$asF = function () {
             return new NewBehavior();
         };
         $this->assertNotNull($component->getBehavior('f'));

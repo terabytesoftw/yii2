@@ -63,7 +63,7 @@ class Action extends Component
      *
      * @since 22.0
      */
-    private Module|null $module = null;
+    private Module|null $_module = null;
 
     /**
      * Constructor.
@@ -113,8 +113,8 @@ class Action extends Component
      */
     public function getModule(): Module|null
     {
-        if ($this->module !== null) {
-            return $this->module;
+        if ($this->_module !== null) {
+            return $this->_module;
         }
 
         return $this->controller?->module;
@@ -131,7 +131,7 @@ class Action extends Component
      */
     public function setModule(Module|null $module): void
     {
-        $this->module = $module;
+        $this->_module = $module;
     }
 
     /**

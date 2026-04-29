@@ -498,9 +498,10 @@ With the example above, route `posts/index` resolves to `app\UseCase\posts\Index
 `app/controllers/` and continue to be discovered through `controllerNamespace`.
 
 Resolution order in `Module::runAction()`: explicit `actionMap` and `controllerMap` entries are checked first, then 
-sub-modules, then controllers by namespace, and finally standalone actions by namespace. **Controllers always win when
-both a controller method and a standalone action could match the same route**, so existing applications upgrade with no
-behavioral change.
+sub-modules, then controllers by namespace, and finally standalone actions by namespace. **If a controller method and a
+standalone Action class both match the same route, `Module::runAction()` throws `InvalidConfigException`** so the
+developer disambiguates instead of silently shadowing one or the other. Existing applications upgrade with no
+behavioral change because before this release a class file at the convention path was never resolved.
 
 Minimal `actionMap` example for an endpoint that does not follow the convention (custom ID or external class):
 

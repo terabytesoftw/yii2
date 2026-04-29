@@ -135,8 +135,9 @@ Use **standalone actions** (convention or `actionMap`) when:
 - The endpoint is single-purpose: webhooks, health checks, integrations, one-shot operations.
 
 Both styles can coexist. A controller can have most of its `actionXxx` methods, and a standalone `<X>Action.php` file
-can fill in a specific action that deserves its own class. Controllers always win when both could match the same route,
-so existing applications upgrade with no behavioral change.
+can fill in a specific action that the controller does **not** implement. If both a controller method and a standalone
+Action class match the same route, `Module::runAction()` throws `InvalidConfigException` so the developer
+disambiguates instead of silently shadowing one or the other.
 
 ## A complete CRUD example
 
@@ -627,5 +628,6 @@ register stubs in `Yii::$container` before invoking. See `tests/framework/base/S
   mid-request still sees whatever value was set previously (typically `null`).
 - CSRF, session, and authentication components are application-level. They keep working unchanged; nothing about
   standalone actions disables them.
-- Controllers always win when both a controller method and a standalone action could match the same route. Existing
-  applications upgrade with no behavioral change.
+- When a controller method AND a standalone Action class both match the same route, `Module::runAction()` throws
+  `InvalidConfigException` so the developer disambiguates explicitly. Existing applications upgrade with no behavioral
+  change because before this release a class file at the convention path was never resolved.

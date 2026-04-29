@@ -145,8 +145,9 @@ class Module extends ServiceLocator
      * CamelCase rules apply as for controllers (see {@see createControllerByID()}).
      *
      * Resolution order in {@see runAction()}: explicit {@see $controllerMap}/{@see $actionMap} entries are checked
-     * first, then sub-modules, then controllers by namespace, and finally standalone actions by namespace. Controllers
-     * therefore always win when both a controller and an action could match the same route.
+     * first, then sub-modules, then controllers by namespace, and finally standalone actions by namespace. When a
+     * controller method AND a standalone Action class both match the same route, {@see runAction()} throws
+     * {@see InvalidConfigException} so the developer disambiguates instead of silently shadowing one or the other.
      *
      * @since 22.0
      */
@@ -593,11 +594,14 @@ class Module extends ServiceLocator
      * Since version 22.0, when the first segment of the route matches a key in [[actionMap]], the action is dispatched
      * as a standalone action via [[runMappedAction()]], without resolving a controller. When no controller resolves the
      * route either, the method falls back to convention-based standalone action lookup under [[actionNamespace]] via
-     * [[createStandaloneAction()]].
+     * [[createStandaloneAction()]]. When a controller method AND a standalone Action class both match the same route,
+     * the method throws [[InvalidConfigException]] so the developer disambiguates instead of silently shadowing one or
+     * the other.
      *
      * @param string $route The route that specifies the action.
      * @param array $params The parameters to be passed to the action.
      *
+     * @throws InvalidConfigException if a controller method and a standalone Action class both match the same route.
      * @throws InvalidRouteException if the requested route cannot be resolved into an action successfully.
      *
      * @return mixed The result of the action.

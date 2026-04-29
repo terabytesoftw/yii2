@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace yiiunit\framework\base;
 
 use PHPUnit\Framework\Attributes\Group;
+use yii\base\InvalidConfigException;
 use yii\base\InvalidRouteException;
 use yii\base\Module;
 use yiiunit\TestCase;
@@ -143,23 +144,6 @@ final class ModuleActionNamespaceTest extends TestCase
         );
     }
 
-    public function testControllerWinsOverStandaloneActionWithSamePath(): void
-    {
-        $module = new Module(
-            'mymod',
-            null,
-            ['controllerNamespace' => self::FIXTURE_NAMESPACE],
-        );
-
-        $result = $module->runAction('post/view');
-
-        self::assertSame(
-            'controller-view',
-            $result,
-            "Existing 'PostController::actionView' must be preferred over a sibling 'post\\ViewAction'.",
-        );
-    }
-
     public function testStandaloneActionRecursesIntoSubModule(): void
     {
         $parent = new Module(
@@ -196,6 +180,23 @@ final class ModuleActionNamespaceTest extends TestCase
         $this->expectException(InvalidRouteException::class);
 
         $module->runAction('sub/foo');
+    }
+
+    public function testThrowInvalidConfigExceptionWhenControllerActionAndStandaloneActionShadow(): void
+    {
+        $module = new Module(
+            'mymod',
+            null,
+            ['controllerNamespace' => self::FIXTURE_NAMESPACE],
+        );
+
+        $this->expectException(InvalidConfigException::class);
+        $this->expectExceptionMessage(
+            'Route "mymod/post/view" matches both a controller action and a standalone Action class. '
+            . 'Remove one to disambiguate.',
+        );
+
+        $module->runAction('post/view');
     }
 
     public function testThrowInvalidRouteExceptionWhenNoControllerNorActionMatches(): void

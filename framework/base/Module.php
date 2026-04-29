@@ -625,6 +625,17 @@ class Module extends ServiceLocator
             $resolvedActionID = $actionID === '' ? $controller->defaultAction : $actionID;
 
             if ($controller->createAction($resolvedActionID) !== null) {
+                if ($this->createStandaloneAction($route) !== null) {
+                    $id = $this->getUniqueId();
+
+                    throw new InvalidConfigException(
+                        'Route "'
+                        . ($id === '' ? $route : "{$id}/{$route}")
+                        . '" matches both a controller action and a standalone Action class. '
+                        . 'Remove one to disambiguate.',
+                    );
+                }
+
                 $oldController = Yii::$app->controller;
                 Yii::$app->controller = $controller;
 

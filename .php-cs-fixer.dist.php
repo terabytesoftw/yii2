@@ -22,7 +22,7 @@ $frameworkFinder = (new Finder())
         '#^helpers/mimeAliases\.php$#',
         '#^helpers/mimeExtensions\.php$#',
         '#^helpers/mimeTypes\.php$#',
-        '#^requirements/requirements\.php$#',
+        '#^requirements(/|$)#',
     ]);
 
 $testsFinder = (new Finder())

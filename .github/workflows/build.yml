@@ -181,6 +181,9 @@ jobs:
 
     env:
       COVERAGE_DRIVER: none
+      PHP_EXTENSIONS: apcu, curl, dom, fileinfo, intl, mbstring, openssl, pdo_sqlite
+      PHP_INI_VALUES: apc.enable_cli=1, date.timezone='UTC', zend.exception_ignore_args=0
+      PHPUNIT_EXCLUDE_GROUP: db wincache prod memcache
 
     runs-on: windows-latest
 
@@ -199,12 +202,12 @@ jobs:
         uses: ./.github/actions/php-setup
         with:
           coverage-driver: ${{ env.COVERAGE_DRIVER }}
-          extensions: apcu, curl, dom, fileinfo, intl, mbstring, openssl, pdo_sqlite
-          ini-values: apc.enable_cli=1, date.timezone='UTC', zend.exception_ignore_args=0
+          extensions: ${{ env.PHP_EXTENSIONS }}
+          ini-values: ${{ env.PHP_INI_VALUES }}
           php-version: ${{ matrix.php }}
 
       - name: Run PHPUnit tests.
         uses: ./.github/actions/phpunit
         with:
           coverage-driver: ${{ env.COVERAGE_DRIVER }}
-          exclude-group: db wincache prod memcache
+          exclude-group: ${{ env.PHPUNIT_EXCLUDE_GROUP }}

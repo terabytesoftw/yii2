@@ -7,7 +7,6 @@ permissions:
 on:
   pull_request: &ignore-paths
     paths-ignore:
-      - ".appveyor.yml"
       - ".dockerignore"
       - ".editorconfig"
       - ".git-blame-ignore-revs"
@@ -180,3 +179,36 @@ jobs:
           coverage-driver: ${{ env.COVERAGE_DRIVER }}
           coverage-token: ${{ secrets.CODECOV_TOKEN }}
           group: prod
+
+  phpunit-windows:
+    name: PHP ${{ matrix.php }} Windows
+
+    env:
+      COVERAGE_DRIVER: none
+
+    runs-on: windows-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        php: [8.3, 8.4]
+
+    steps:
+      - name: Checkout.
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Setup PHP with Composer.
+        uses: ./.github/actions/php-setup
+        with:
+          coverage-driver: ${{ env.COVERAGE_DRIVER }}
+          extensions: apcu, curl, dom, intl, mbstring
+          ini-values: apc.enable_cli=1, date.timezone='UTC', zend.exception_ignore_args=0
+          php-version: ${{ matrix.php }}
+
+      - name: Run PHPUnit tests.
+        uses: ./.github/actions/phpunit
+        with:
+          coverage-driver: ${{ env.COVERAGE_DRIVER }}
+          exclude-group: db wincache prod memcache

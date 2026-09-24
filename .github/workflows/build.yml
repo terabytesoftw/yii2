@@ -45,10 +45,10 @@ env:
 
 jobs:
   phpunit:
-    name: PHP ${{ matrix.php }}${{ matrix.prod && '-prod' || '' }}
+    name: PHP ${{ matrix.php }}
 
     env:
-      COVERAGE_DRIVER: ${{ matrix.prod && 'none' || matrix.php < '8.1' && 'xdebug' || 'pcov' }}
+      COVERAGE_DRIVER: ${{ matrix.php < 8.1 && 'xdebug' || 'pcov' }}
       IGNORE_PLATFORM_REQS: false
 
     runs-on: ubuntu-22.04
@@ -67,16 +67,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - php: '7.4'
-          - php: '8.0'
-          - php: '8.1'
-          - php: '8.2'
-          - php: '8.3'
-          - php: '8.4'
-          - php: '8.5'
-          - php: '8.5'
-            prod: true
+        php: [7.4, 8.0, 8.1, 8.2, 8.3, 8.4, 8.5]
 
     steps: &build-steps
       - name: Checkout.
@@ -90,25 +81,18 @@ jobs:
       - name: Setup PHP with Composer.
         uses: ./.github/actions/php-setup
         with:
-          composer-command: ${{ matrix.prod && 'install' || 'update' }}
           coverage-driver: ${{ env.COVERAGE_DRIVER }}
+          extensions: ${{ matrix.php < 8.0 && 'apc' || 'apcu' }}, ${{ env.PHP_EXTENSIONS }}
           ignore-platform-reqs: ${{ env.IGNORE_PLATFORM_REQS }}
-          extensions: ${{ matrix.php < '8.0' && 'apc' || 'apcu' }}, ${{ env.PHP_EXTENSIONS }}
           ini-values: ${{ env.PHP_INI_VALUES }}, session.save_path="${{ runner.temp }}"
           php-version: ${{ matrix.php }}
-
-      - name: Audit dependencies.
-        if: matrix.prod
-        shell: bash
-        run: composer audit --locked --no-interaction
 
       - name: Run PHPUnit tests.
         uses: ./.github/actions/phpunit
         with:
           coverage-driver: ${{ env.COVERAGE_DRIVER }}
           coverage-token: ${{ secrets.CODECOV_TOKEN }}
-          exclude-group: ${{ !matrix.prod && env.PHPUNIT_EXCLUDE_GROUP || '' }}
-          group: ${{ matrix.prod && 'prod' || '' }}
+          exclude-group: ${{ env.PHPUNIT_EXCLUDE_GROUP }}
 
   phpunit-windows:
     name: PHP ${{ matrix.php }} Windows

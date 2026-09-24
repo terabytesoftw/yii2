@@ -101,7 +101,7 @@ jobs:
       COVERAGE_DRIVER: none
       PHP_EXTENSIONS: apcu, curl, dom, fileinfo, gd, intl, mbstring, openssl, pdo_sqlite
       PHP_INI_VALUES: apc.enable_cli=1, date.timezone='UTC', zend.exception_ignore_args=0
-      PHPUNIT_EXCLUDE_GROUP: db wincache prod memcache
+      PHPUNIT_EXCLUDE_GROUP: db,wincache,prod,memcache
 
     runs-on: windows-latest
 

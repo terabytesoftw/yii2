@@ -48,6 +48,7 @@ jobs:
       database-type: mssql
       database-versions: '["2019-latest","2022-latest"]'
       extensions: curl, intl, pdo, pdo_sqlsrv
+      ignore-platform-reqs: true
       hook: |
         sudo ACCEPT_EULA=Y apt-get install -y msodbcsql18
         docker exec -i database /opt/mssql-tools18/bin/sqlcmd -C -S localhost -U SA -P 'YourStrong!Passw0rd' -Q "IF DB_ID(N'yiitest') IS NULL CREATE DATABASE yiitest;"
@@ -71,6 +72,7 @@ jobs:
       database-type: mssql
       database-versions: '["2022-latest"]'
       extensions: curl, intl, pdo, pdo_sqlsrv
+      ignore-platform-reqs: true
       hook: |
         sudo ACCEPT_EULA=Y apt-get install -y msodbcsql18
         docker exec -i database /opt/mssql-tools18/bin/sqlcmd -C -S localhost -U SA -P 'YourStrong!Passw0rd' -Q "IF DB_ID(N'yiitest') IS NULL CREATE DATABASE yiitest;"

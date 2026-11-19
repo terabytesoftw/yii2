@@ -41,6 +41,7 @@ jobs:
       configuration: phpstan.dist.neon
       concurrency-group: phpstan-${{ github.ref }}
       extensions: apcu, curl, dom, imagick, intl, mbstring, mcrypt, memcached
+      ignore-platform-reqs: true
       php-version: '[8.6]'
 
   phpstan-7x:

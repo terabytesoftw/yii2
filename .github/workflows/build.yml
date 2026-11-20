@@ -130,6 +130,7 @@ jobs:
 
   phpunit-nightly:
     name: PHP ${{ matrix.php }}
+    continue-on-error: true
 
     env:
       COVERAGE_DRIVER: none

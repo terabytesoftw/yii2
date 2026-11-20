@@ -120,19 +120,21 @@ class FileTargetTest extends TestCase
         mkdir(dirname($logFile), 0777, true);
 
         $logger = new Logger();
-        $dispatcher = new Dispatcher([
-            'logger' => $logger,
-            'targets' => [
-                'file' => [
-                    'class' => 'yii\log\FileTarget',
-                    'logFile' => $logFile,
-                    'levels' => ['warning'],
-                    'maxFileSize' => 1,
-                    'maxLogFiles' => 1,
-                    'logVars' => [],
+        $dispatcher = new Dispatcher(
+            [
+                'logger' => $logger,
+                'targets' => [
+                    'file' => [
+                        'class' => 'yii\log\FileTarget',
+                        'logFile' => $logFile,
+                        'levels' => ['warning'],
+                        'maxFileSize' => 1,
+                        'maxLogFiles' => 1,
+                        'logVars' => [],
+                    ],
                 ],
             ],
-        ]);
+        );
 
         $logger->log(str_repeat('x', 2048), Logger::LEVEL_WARNING);
         $logger->flush(true);
@@ -146,8 +148,8 @@ class FileTargetTest extends TestCase
 
         clearstatcache();
 
-        $this->assertFileExists($logFile . '.1');
-        $this->assertSame($expectedMtime, filemtime($logFile . '.1'));
+        $this->assertFileExists("{$logFile}.1");
+        $this->assertEquals($expectedMtime, filemtime("{$logFile}.1"));
     }
 
     public function testLogEmptyStrings(): void

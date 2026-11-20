@@ -110,7 +110,7 @@ class BaseIpHelper
     {
         $ipBinary = null;
         if (static::getIpVersion($ip) === self::IPV4) {
-            $ipBinary = pack('N', ip2long($ip));
+            $ipBinary = pack('N', $ip === '' ? 0 : ip2long($ip));
         } elseif (@inet_pton('::1') === false) {
             throw new NotSupportedException('IPv6 is not supported by inet_pton()!');
         } else {

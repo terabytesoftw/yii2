@@ -123,42 +123,6 @@ jobs:
           ini-values: ${{ env.PHP_INI_VALUES }}
           php-version: ${{ matrix.php }}
 
-      # TEMPORARY: diagnose copy() of a file locked with flock(LOCK_EX) on Windows; remove before merge.
-      - name: Diagnose copy() of a locked file.
-        if: matrix.php == '8.5' || matrix.php == '8.6'
-        shell: bash
-        run: |
-          php <<'PHP'
-          <?php
-          $dir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'yii-copy-lock';
-          @mkdir($dir);
-          $src = $dir . DIRECTORY_SEPARATOR . 'a.log';
-          @unlink($src);
-
-          foreach (['unlocked' => false, 'locked' => true] as $label => $lock) {
-              $dst = $dir . DIRECTORY_SEPARATOR . "b-{$label}.log";
-              @unlink($dst);
-              file_put_contents($src, str_repeat('x', 2048));
-              $mtime = time() - 7200;
-              touch($src, $mtime);
-              clearstatcache();
-              $fp = fopen($src, 'a');
-              if ($lock) {
-                  var_dump(flock($fp, LOCK_EX));
-              }
-              error_clear_last();
-              $copied = copy($src, $dst);
-              $error = error_get_last();
-              clearstatcache();
-              echo "[{$label}] PHP " . PHP_VERSION . "\n";
-              var_dump($copied, $error, filesize($dst), filemtime($dst) === $mtime);
-              if ($lock) {
-                  flock($fp, LOCK_UN);
-              }
-              fclose($fp);
-          }
-          PHP
-
       - name: Run PHPUnit tests.
         uses: yiisoft/yii2-actions/actions/phpunit@d90cdb5bb58df697c808bb66928864f574c6d07b # master
         with:

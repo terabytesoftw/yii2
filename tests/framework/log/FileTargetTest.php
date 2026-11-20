@@ -152,6 +152,49 @@ class FileTargetTest extends TestCase
         $this->assertEquals($expectedMtime, filemtime("{$logFile}.1"));
     }
 
+    public function testRotateMovesContentsToRotatedFile(): void
+    {
+        $logFile = Yii::getAlias('@yiiunit/runtime/log/filetargettest.log');
+        FileHelper::removeDirectory(dirname($logFile));
+        mkdir(dirname($logFile), 0777, true);
+
+        $logger = new Logger();
+        $dispatcher = new Dispatcher(
+            [
+                'logger' => $logger,
+                'targets' => [
+                    'file' => [
+                        'class' => 'yii\log\FileTarget',
+                        'logFile' => $logFile,
+                        'levels' => ['warning'],
+                        'maxFileSize' => 1,
+                        'maxLogFiles' => 1,
+                        'logVars' => [],
+                    ],
+                ],
+            ],
+        );
+
+        $logger->log(str_repeat('x', 2048), Logger::LEVEL_WARNING);
+        $logger->flush(true);
+
+        $rotatedContents = file_get_contents($logFile);
+
+        $logger->log('y', Logger::LEVEL_WARNING);
+        $logger->flush(true);
+
+        $this->assertSame(
+            $rotatedContents,
+            file_get_contents("{$logFile}.1"),
+            'Rotated file must hold the previous log contents.',
+        );
+
+        $logContents = file_get_contents($logFile);
+
+        $this->assertStringNotContainsString('x', $logContents, 'Log file must be truncated on rotation.');
+        $this->assertStringEndsWith("y\n", $logContents, 'New message must be written after rotation.');
+    }
+
     public function testLogEmptyStrings(): void
     {
         $logFile = Yii::getAlias('@yiiunit/runtime/log/filetargettest.log');

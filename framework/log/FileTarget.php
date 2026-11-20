@@ -78,6 +78,10 @@ class FileTarget extends Target
      */
     public $rotateByCopy = true;
 
+    /**
+     * @var resource|null handle of [[logFile]] that holds the exclusive lock while [[export()]] rotates the files.
+     */
+    private $_lockedHandle;
 
     /**
      * Initializes the route.
@@ -113,12 +117,17 @@ class FileTarget extends Target
             return; // No messages to export, so we exit the function early
         }
 
-        if (strpos($this->logFile, '://') === false || strncmp($this->logFile, 'file://', 7) === 0) {
+        $isLocalFile = strpos($this->logFile, '://') === false || strncmp($this->logFile, 'file://', 7) === 0;
+
+        if ($isLocalFile) {
             $logPath = dirname($this->logFile);
             FileHelper::createDirectory($logPath, $this->dirMode, true);
         }
 
-        if (($fp = @fopen($this->logFile, 'a')) === false) {
+        // a readable handle lets rotation copy the locked file; Windows enforces the lock on any other handle
+        $readable = $isLocalFile && $this->enableRotation;
+
+        if (($fp = @fopen($this->logFile, $readable ? 'a+' : 'a')) === false) {
             throw new InvalidConfigException("Unable to append to log file: {$this->logFile}");
         }
         @flock($fp, LOCK_EX);
@@ -128,7 +137,12 @@ class FileTarget extends Target
             clearstatcache();
         }
         if ($this->enableRotation && @filesize($this->logFile) > $this->maxFileSize * 1024) {
-            $this->rotateFiles();
+            $this->_lockedHandle = $readable ? $fp : null;
+            try {
+                $this->rotateFiles();
+            } finally {
+                $this->_lockedHandle = null;
+            }
         }
         $writeResult = @fwrite($fp, $text);
         if ($writeResult === false) {
@@ -167,6 +181,10 @@ class FileTarget extends Target
                     continue;
                 }
                 $newFile = $this->logFile . '.' . ($i + 1);
+                if ($i === 0 && $this->_lockedHandle !== null) {
+                    $this->rotateLockedFile($this->_lockedHandle, $newFile);
+                    continue;
+                }
                 $this->rotateByCopy($rotateFile, $newFile);
                 if ($i === 0) {
                     $this->clearLogFile($rotateFile);
@@ -185,6 +203,39 @@ class FileTarget extends Target
             @ftruncate($filePointer, 0);
             @fclose($filePointer);
         }
+    }
+
+    /**
+     * Copies the locked log file into the first rotated file through the handle that holds the lock, then truncates it.
+     *
+     * Windows enforces the lock held by [[export()]] on every other handle, so reading the log file by path there
+     * yields no data. The log file is truncated only when its whole content has been copied.
+     *
+     * @param resource $handle readable handle of [[logFile]] holding the exclusive lock.
+     * @param string $newFile path of the first rotated file.
+     */
+    private function rotateLockedFile($handle, $newFile)
+    {
+        $stat = @fstat($handle);
+
+        if ($stat === false || !@rewind($handle) || ($target = @fopen($newFile, 'w')) === false) {
+            return;
+        }
+
+        $copied = @stream_copy_to_stream($handle, $target);
+
+        if (!@fclose($target) || $copied !== $stat['size']) {
+            return;
+        }
+
+        @touch($newFile, $stat['mtime']);
+
+        if ($this->fileMode !== null) {
+            @chmod($newFile, $this->fileMode);
+        }
+
+        @ftruncate($handle, 0);
+        @rewind($handle);
     }
 
     /***
